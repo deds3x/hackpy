@@ -9,9 +9,9 @@ import hackpy
 PATH = os.path.dirname(os.path.realpath(__file__)) # Get current directory path
 CORE = os.path.basename(os.path.realpath(sys.argv[0])) # Get this script filename.
 
-hackpy.configure(PATH + '\\hackpy') # Folder for temp files. default is: %temp%\hackpy
+hackpy.configure() # Folder for temp files.
 hackpy.clean() # Remove all hackpy temp files from system
-hackpy.load(architecture=64) # default 32
+hackpy.load(architecture=64) # default it 32
 
 # Autorun
 hackpy.autorun(PATH, CORE, 'test', state=True) # Add this file to startup
