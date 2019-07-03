@@ -4,14 +4,8 @@ logo = ("""
  |_  ..  _| | |_| |  / _` |  / __| | |/ /   | |_) | | | | |
  |_      _| |  _  | | (_| | | (__  |   <    |  __/  | |_| |
    |_||_|   |_| |_|  \__,_|  \___| |_|\_\   |_|      \__, |
-         Module Created by LimerBoy with Love <3     |___/
+         Module Created by L1merBoy with Love <3     |___/
 """)
-
-# Check system
-from platform import system as platform_system
-if platform_system().lower() != 'windows':
-	raise OSError('I\'m work only in Windows, system ' + platform_system() + ' not supported!')
-
 
 # Import modules
 from os import system as os_system
@@ -27,12 +21,14 @@ from wget import download as wget_download
 from getmac import get_mac_address as getmac
 from random import randint as random_randint
 
+# Install path
 install_path = os_environ['TEMP'] + '\\hackpy'
-def configure(path = os_environ['TEMP'] + '\\hackpy'):
-	global install_path
-	install_path = path
-	if not os_path.exists(path):
-		os_mkdir(path)
+if not os_path.exists(install_path):
+	os_mkdir(install_path)
+
+# Warning about configure
+def configure():
+	raise Warning('LimerBoy >> This paramenter disabled now! Please remove: hackpy.configure')
 
 # Load file from URL
 def wget(link, statusbar = None, output = None):
