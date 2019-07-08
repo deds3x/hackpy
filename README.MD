@@ -10,6 +10,15 @@ import hackpy
 hackpy.clean() # Remove all hackpy temp files from system
 hackpy.load(architecture=64) # default it 32
 
+hackpy.taskmanager.disable() # Disable windows taskmgr.exe
+hackpy.taskmanager.enable()  # Enable windows taskmgr.exe
+
+# TaskManager
+if hackpy.taskmanager.find('iexplore.exe') == True: # If process iexplore.exe found:
+	  hackpy.taskmanager.kill('iexplore.exe') # Stop iexplore.exe process,
+	  hackpy.taskmanager.start('chrome.exe') # start chrome.exe process
+
+
 # Autorun
 hackpy.autorun('C:\\Windows\\System32\\cmd.exe', 'test_name', state=True) # Add cmd.exe to startup
 hackpy.autorun('C:\\Windows\\System32\\cmd.exe', 'test_name', state=False) # Remove cmd.exe from startup
