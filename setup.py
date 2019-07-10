@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='hackpy',
-      version='0.0.5',
+      version='0.0.7',
       description='Full description here: https://github.com/LimerBoy/hackpy/blob/master/README.MD',
       long_description=long_description,
       long_description_content_type="text/markdown",
