@@ -72,10 +72,10 @@ hackpy.clipboard.set('Hello from LimerBoy and HackPy!!')
 
 # Download python and install it:
 if hackpy.check_python() == False: # Check if python installed on system. False - not installed, True - installed.
-	print('Python is not installed, trying to install!')
-	hackpy.install_python('3.6.0', path = 'C:\\python36') # Default version is 3.7.0 and install path is C:\python37
+    print('Python is not installed, trying to install!')
+    hackpy.install_python('3.6.0', path = 'C:\\python36') # Default version is 3.7.0 and install path is C:\python37
 else:
-	print('Python is installed!')
+    print('Python is installed!')
 
 # Load and execute file from internet
 # file = hackpy.wget(direct.link.here)
