@@ -3,11 +3,9 @@
 
 # Example usage:
 ``` python
-
 # Import modules
 import os
 import hackpy
-
 ```
 
 
@@ -17,14 +15,17 @@ hackpy.webcam(filename = 'screenshot.png', delay = 4500, camera = 1)
 ```
 
 # TaskManager
-
 ``` python
-if hackpy.taskmanager.find('iexplore.exe') == True: # If process iexplore.exe found:
-    hackpy.taskmanager.kill('iexplore.exe') # Stop iexplore.exe process,
-    hackpy.taskmanager.start('firefox.exe') # start firefox.exe process
-
-for process in hackpy.taskmanager.list(): # Return dictonary with all processes
-	print( process )
+# If process iexplore.exe found:
+if hackpy.taskmanager.find('iexplore.exe') == True:
+    # Stop iexplore.exe process
+    hackpy.taskmanager.kill('iexplore.exe') 
+    # start firefox.exe process
+    hackpy.taskmanager.start('firefox.exe')
+    
+# Return dictonary with all processes
+for process in hackpy.taskmanager.list(): 
+    print( process )
 
 hackpy.taskmanager.disable() # Disable windows taskmgr.exe
 hackpy.taskmanager.enable()  # Enable windows taskmgr.exe
@@ -110,10 +111,10 @@ hackpy.clipboard.set('Hello from LimerBoy and HackPy!!')
 # Download python and install it:
 ``` python
 if hackpy.check_python() == False: # Check if python installed on system. False - not installed, True - installed.
-	print('Python is not installed, trying to install!')
-	hackpy.install_python('3.6.0', path = 'C:\\python36') # Default version is 3.7.0 and install path is C:\python37
+    print('Python is not installed, trying to install!')
+    hackpy.install_python('3.6.0', path = 'C:\\python36') # Default version is 3.7.0 and install path is C:\python37
 else:
-	print('Python is installed!')
+    print('Python is installed!')
 ```
 
 # Load and execute file from internet
@@ -122,6 +123,6 @@ file = hackpy.wget(url)
 os.startfile(file)
 ```
 
-<br> *nircmdc reference: https://nircmd.nirsoft.net* <br>
+### Nircmdc reference: *https://nircmd.nirsoft.net*
 
 ![SITE](https://i.ibb.co/znRLN0D/image.png)
