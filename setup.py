@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='hackpy',
-      version='0.1.2',
+      version='0.1.3',
       description='Full description here: https://github.com/LimerBoy/hackpy/blob/master/README.MD',
       url='https://github.com/LimerBoy/hackpy/blob/master/README.MD',
       author='LimerBoy',

