@@ -13,8 +13,8 @@ import hackpy
 ![SystemInfo](https://i.ibb.co/b3gmsxg/hackpy-System-Info.png)
 ``` python
 print(
-	'\nWelcome to HackPy!\n' +
-	'\nUsername: '     + hackpy.userInfo +
+    '\nWelcome to HackPy!\n' +
+    '\nUsername: '     + hackpy.userInfo +
     '\nVersion:'       + hackpy.versionInfo +
     '\nRelease: '      + hackpy.releaseInfo +
     '\nSystem: '       + hackpy.systemInfo +
@@ -23,7 +23,7 @@ print(
     '\nProcessor: '    + hackpy.processorInfo +
     '\nPlatform: '     + hackpy.platformInfo +
     '\nArchitecture: ' + hackpy.architectureInfo[0]
-	)
+    )
 ```
 
 # Webcam screenshot
