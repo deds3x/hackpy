@@ -1,4 +1,4 @@
-![Python](https://www.python.org/static/img/python-logo@2x.png)
+﻿![Python](https://www.python.org/static/img/python-logo@2x.png)
 # `pip install hackpy` :bomb:
 
 # Example usage:
@@ -28,25 +28,22 @@ print(
 
 # Webcam screenshot
 ``` python
-hackpy.webcam(filename = 'screenshot.png', delay = 4500, camera = 1)
+hackpy.webcamScreenshot(filename = 'screenshot.png', delay = 4500, camera = 1)
 ```
 
 # Desktop screenshot
 ``` python
-def screenshot(file = 'desktop.png'):
-    hackpy.command.nircmdc('savescreenshotfull ' file)
-
-screenshot()
+hackpy.desktopScreenshot(filename = 'desktop.png')
 ```
 
 # TaskManager
 ``` python
 # If process iexplore.exe found:
-if hackpy.taskmanager.find('iexplore.exe') == True:
+if hackpy.taskmanager('iexplore.exe').find():
     # Stop iexplore.exe process
-    hackpy.taskmanager.kill('iexplore.exe') 
+    hackpy.taskmanager('iexplore.exe').kill() 
     # start firefox.exe process
-    hackpy.taskmanager.start('firefox.exe')
+    hackpy.taskmanager('firefox.exe').start()
     
 # Return dictonary with all processes
 for process in hackpy.taskmanager.list(): 
@@ -61,10 +58,10 @@ hackpy.taskmanager.enable()
 # Autorun
 ``` python
 # Add cmd.exe to startup
-hackpy.autorun('C:\\Windows\\System32\\cmd.exe', state = True)
+hackpy.autorun('C:\\Windows\\System32\\cmd.exe').install()
 
 # Remove cmd.exe from startup
-hackpy.autorun('C:\\Windows\\System32\\cmd.exe', state = False)
+hackpy.autorun('C:\\Windows\\System32\\cmd.exe').uninstall()
 ```
 
 # Check if program running as admin
@@ -116,11 +113,6 @@ print('[?] - Latitude: ' + data['geoplugin_latitude'])
 # Return dict: {"geoplugin_request", "geoplugin_status", "geoplugin_delay", "geoplugin_credit", "geoplugin_city", "geoplugin_region", "geoplugin_regionCode", "geoplugin_regionName", "geoplugin_areaCode", "geoplugin_dmaCode", "geoplugin_countryCode", "geoplugin_countryName", "geoplugin_inEU", "geoplugin_euVATrate", "geoplugin_continentCode", "geoplugin_continentName", "geoplugin_latitude", "geoplugin_longitude", "geoplugin_locationAccuracyRadius", "geoplugin_timezone", "geoplugin_currencyCode", "geoplugin_currencySymbol", "geoplugin_currencySymbol_UTF8", "geoplugin_currencyConverter"}
 ```
 
-# Sleep
-``` python
-hackpy.sleep(5) # Wait 5 secounds
-```
-
 # Get router bssid:
 ``` python
 # Get router BSSID
@@ -136,8 +128,25 @@ print(
 
 # Windows messagebox:
 ``` python
-# MessageBox types: none, info, question, warning, error 
-hackpy.messagebox('error', 'LOL', 'System has been killed :D')
+
+# MB_OK
+# MB_OK_CANCEL
+# MB_ABORTRETRYIGNORE
+# MB_YES_NO_CANCEL
+# MB_YES_NO
+# MB_RETRYCANCEL
+# MB_CANCELTRYCONTINUE
+# MB_HELP
+
+# ICON_ERROR
+# ICON_QUESTION
+# ICON_WARNING
+# ICON_INFORMATION
+
+# MB_TOPMOST
+
+hackpy.messagebox('text', 'title')
+hackpy.messagebox('text', 'title', settings=['ICON_WARNING', 'MB_RETRYCANCEL', 'MB_TOPMOST'])
 ```
 
 # Change desktop wallpaper:
@@ -190,10 +199,10 @@ hackpy.clipboard.set('Hello from LimerBoy and HackPy!!')
 # Download python and install it:
 ``` python
 # Check if python installed on system. False - not installed, True - installed.
-if hackpy.checkPython() == False: 
+if not hackpy.python.check(): 
     print('Python is not installed, trying to install!')
     # Default version is 3.7.0 and install path is C:\python37
-    hackpy.installPython('3.6.0', path = 'C:\\python36') 
+    hackpy.python.install('3.6.0', path = 'C:\\python36') 
 else:
     print('Python is installed!')
 ```
@@ -206,12 +215,6 @@ file = hackpy.wget(url)
 os.startfile(file)
 ```
 
-# Get active window
-``` python
-window = hackpy.getActiveWindow() # return active window
-print('You active window is: ' + window)
-```
-
 # Power
 ``` python
 hackpy.power.reboot()     # Reboot
@@ -219,16 +222,3 @@ hackpy.power.shutdown()   # Shutdown
 hackpy.power.logoff()     # Logoff
 hackpy.power.hibernate()  # Hibernate
 ```
-
-# Get cursor position
-``` python
-position = hackpy.getCursorPos() # return cursor position
-print(
-    'You cursor position is: ' +  
-    '\nX: ' + str(position[0]) + 
-    '\nY: ' + str(position[1])
-    )
-
-hackpy.setCursorPos(100, 500) # x, y | BETA
-```
-
