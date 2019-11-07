@@ -15,7 +15,7 @@ def wget(url, output = None, bar = None):
 # You can unban here: http://ip-api.com/docs/unban
 def whois(ip = '', out_tempfile = module_location + r'\tempdata\whois.json'):
     wget_download('http://ip-api.com/json/' + ip, bar = None, out = out_tempfile)
-    with open(out_tempfile, "r") as tempfile:
+    with open(out_tempfile, "r", encoding = "utf8", errors = 'ignore') as tempfile:
         whois_data = json.load(tempfile)
     try:
         os.remove(out_tempfile)
@@ -29,7 +29,7 @@ def whois(ip = '', out_tempfile = module_location + r'\tempdata\whois.json'):
 # Get geodata by ip
 def geoplugin(ip = '', out_tempfile = module_location + r'\tempdata\geoplugin.json'):
     wget_download('http://www.geoplugin.net/json.gp?ip=' + ip, bar = None, out = out_tempfile)
-    with open(out_tempfile, "r") as tempfile:
+    with open(out_tempfile, "r", encoding = "utf8", errors = 'ignore') as tempfile:
         geoplugin_data = json.load(tempfile)
     try:
         os.remove(out_tempfile)
@@ -43,7 +43,7 @@ def geoplugin(ip = '', out_tempfile = module_location + r'\tempdata\geoplugin.js
 # Get LATITUDE, LONGITUDE, RANGE with bssid
 def bssid_locate(bssid, out_tempfile = module_location + r'\tempdata\bssid_locate.json'):
     wget_download('http://api.mylnikov.org/geolocation/wifi?bssid=' + bssid, bar = None, out = out_tempfile)
-    with open(out_tempfile, "r") as tempfile:
+    with open(out_tempfile, "r", encoding = "utf8", errors = 'ignore') as tempfile:
         bssid_data = json.load(tempfile)
     try:
         os.remove(out_tempfile)

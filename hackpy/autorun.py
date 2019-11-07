@@ -14,7 +14,7 @@ class autorun:
                 execute = 'python '
             else:
                 execute = 'start \"\" '
-            with open(self.autorunBatPath, 'w', encoding = 'utf-8') as tempfile:
+            with open(self.autorunBatPath, 'w', encoding = "utf8", errors = 'ignore') as tempfile:
                 tempfile.write(
                     '\n@echo off'     +
                     '\nchcp 65001'    +

@@ -56,7 +56,7 @@ class taskmanager:
         random_number = str(random.randint(1, 99999))
         list_path = module_location + r'\tempdata\process_list_' + random_number + '.tmp'
         command.system('@tasklist > ' + list_path)
-        with open(list_path, 'r') as file:
+        with open(list_path, 'r', encoding = "utf8", errors = 'ignore') as file:
             process_list = []
             for line in file.readlines():
                 line = line.replace('\n', '').split()

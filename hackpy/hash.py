@@ -11,7 +11,7 @@ def md5(file):
     ##| Get file md5
     ##|
     hash_md5 = hashlib.md5()
-    with open(file, "rb") as f:
+    with open(file, "rb", encoding = "utf8", errors = 'ignore') as f:
         for chunk in iter(lambda: f.read(4096), b""):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
