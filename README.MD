@@ -4,24 +4,24 @@
 # Example usage:
 ``` python
 # Warning! This module working only on Windows systems!
-# Import modules
-import os
+# Import module
 import hackpy
+
 ```
 
 # Get user and system information
 ![SystemInfo](https://i.ibb.co/b3gmsxg/hackpy-System-Info.png)
 ``` python
 print(
-    '\nWelcome to HackPy!\n' +
-    '\nUsername: '     + hackpy.userInfo +
-    '\nVersion:'       + hackpy.versionInfo +
-    '\nRelease: '      + hackpy.releaseInfo +
-    '\nSystem: '       + hackpy.systemInfo +
-    '\nNode: '         + hackpy.nodeInfo +
-    '\nMachine: '      + hackpy.machineInfo +
+    '\nWelcome to HackPy!\n'                  +
+    '\nUsername: '     + hackpy.userInfo      +
+    '\nVersion: '      + hackpy.versionInfo   +
+    '\nRelease: '      + hackpy.releaseInfo   +
+    '\nSystem: '       + hackpy.systemInfo    +
+    '\nNode: '         + hackpy.nodeInfo      +
+    '\nMachine: '      + hackpy.machineInfo   +
     '\nProcessor: '    + hackpy.processorInfo +
-    '\nPlatform: '     + hackpy.platformInfo +
+    '\nPlatform: '     + hackpy.platformInfo  +
     '\nArchitecture: ' + hackpy.architectureInfo[0]
     )
 ```
@@ -93,6 +93,42 @@ hackpy.file.atributeNormal('file.txt')        # Show file
 data = hackpy.detectProtection()
 for antivirus in data:
     print('[!] - Antivirus detected: ' + antivirus + ', install path: ' + data[antivirus])
+```
+
+# Ping
+``` python
+target = 'google.com'
+if hackpy.ping(target):         # return True  if target is online
+    print(target + ' is online!') 
+else:
+    print('Failed to connect!') # return False if target not found
+```
+
+# Get ip by url
+``` python
+target = 'google.com'
+ip     = hackpy.getHostByName(target) # return '172.217.16.14'
+
+print('IP: ' + ip)
+```
+
+
+# Get mac address by local ip
+``` python
+target = '192.168.1.1'
+mac    = hackpy.getmac(target) # return 'XX:XX:XX:XX:XX:XX' 
+
+print('mac: ' + mac)
+```
+
+# Port scanner
+``` python
+target = 'youtube.com'
+port   = '80'
+if hackpy.portIsOpen(target, port):
+    print('Port ' + port + ' is opened!')
+else:
+    print('Port ' + port + ' is closed!')
 ```
 
 # Information about you IP:
@@ -171,14 +207,45 @@ hackpy.command.system('shutdown -s -t 260')
 
 # Passwords recovery
 ![SITE](https://i.ibb.co/nnjYFxV/hackpy-passwords-Recovery.png)
+Working only with Chrome!
 ``` python
-for key, account in hackpy.passwordsRecovery().items():
+hackpy.passwords import *
+
+for key, account in passwordsRecovery().items():
     print(
         '\n['  + str(key) + ']'
         '\n|____ site: ' + account['url'] + 
         '\n |___ user: ' + account['login'] + 
         '\n  |__ pass: ' + account['password']
         )
+```
+
+# Mouse, Windows control
+``` python
+import hackpy.activity
+
+hackpy.activity.getActiveWindow() # Return active window title
+hackpy.activity.userIsActive()    # return True if user move mouse. Return False if not | BETA!!!
+hackpy.activity.setCursorPos(100, 100) # x, y
+hackpy.activity.getCursorPos() # return  x, y
+```
+
+# Time
+``` python
+import hackpy.time as time
+
+# Get first time
+firstTime  = time.time()
+# Sleep program for 3 secounds
+time.sleep(3)
+# Get last time
+secondTime = time.time()
+
+print('Code executed. Time elapsed: ' + str(round(secondTime - firstTime)) + ' secounds.')
+
+# Get current time
+time.date.day() # day, month, year, hour, minute, secound and all.
+print('Now ' + time.date.year() + ' year!')
 ```
 
 # SendKeyPress:
@@ -189,6 +256,8 @@ hackpy.sendKey('Hello bro{ENTER}')
 
 # Clipboard
 ``` python
+import hackpy.clipboard
+
 # Get text from clipboard:
 data = hackpy.clipboard.get()
 print('Text in clipboard is ' + data)
@@ -212,7 +281,7 @@ else:
 # Download file
 file = hackpy.wget(url)
 # Start file
-os.startfile(file)
+hackpy.file.start(file)
 ```
 
 # Power

@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='hackpy',
-      version='0.1.4',
+      version='0.1.5',
       description='Full description here: https://github.com/LimerBoy/hackpy/blob/master/README.MD',
       url='https://github.com/LimerBoy/hackpy/blob/master/README.MD',
       author='LimerBoy',
@@ -17,6 +17,7 @@ setup(name='hackpy',
           'wget',
           'getmac',
           'pyperclip',
+          'pywin32',
       ],
       include_package_data=True,
       zip_safe=False)

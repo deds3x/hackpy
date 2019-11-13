@@ -9,7 +9,7 @@ logo = (r"""
 
 # Import hackpy modules
 from hackpy.spy         import *
-from hackpy.uac         import *
+from hackpy.uac        import *
 from hackpy.info        import *
 from hackpy.hash        import *
 from hackpy.file        import *
@@ -21,8 +21,9 @@ from hackpy.network     import *
 from hackpy.commands    import *
 from hackpy.settings    import *
 from hackpy.keyboard    import *
-from hackpy.clipboard   import *
-from hackpy.passwords   import *
+#from hackpy.clipboard  import *
+#from hackpy.activity   import *
+#from hackpy.passwords  import *
 from hackpy.protection  import *
 from hackpy.messagebox  import *
 from hackpy.taskmanager import *

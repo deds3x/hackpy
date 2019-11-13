@@ -7,6 +7,7 @@ class autorun:
         self.name = self.file.split('.')[0]
         self.autorunDirPath = (os.environ['SystemDrive'] + '\\Users\\' + os.getenv('USERNAME') + '\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
         self.autorunBatPath = (self.autorunDirPath + '\\' + self.name + '.cmd')
+    
     # Add file to startup
     def install(self):
         if os.path.isfile(self.file):
@@ -24,6 +25,7 @@ class autorun:
             return os.path.exists(self.autorunBatPath)
         else:
             return False
+
     # Delete file from startup
     def uninstall(self):
         try:
