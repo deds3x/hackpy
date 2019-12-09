@@ -1,4 +1,4 @@
-import ctypes
+from ctypes import windll
 
 # Table
 MB_OK                = 0x0
@@ -28,6 +28,6 @@ def messagebox(text, title, settings = []):
         settings = eval(' | '.join(settings))
     else:
         settings = None
-    result = ctypes.windll.user32.MessageBoxW(0, text, title, settings)
+    result = windll.user32.MessageBoxW(0, text, title, settings)
     return result
 

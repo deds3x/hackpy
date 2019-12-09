@@ -1,5 +1,5 @@
-import os
-import random
+from os import remove
+from random import randint
 from hackpy.info     import *
 from hackpy.commands import *
 
@@ -13,6 +13,7 @@ class taskmanager:
     ##| hackpy.taskmanager('process_name.exe').start()
     ##| hackpy.taskmanager('process_name.exe').find() # return True or False
     ##| hackpy.taskmanager.list() # return all process list
+    ##| hackpy.taskmanager.getpid('process_name.exe') # return process id
     ##|
     def __init__(self, process):
         self.process = process
@@ -53,7 +54,7 @@ class taskmanager:
             return False
 
     def list():
-        random_number = str(random.randint(1, 99999))
+        random_number = str(randint(1, 99999))
         list_path = module_location + r'\tempdata\process_list_' + random_number + '.tmp'
         command.system('@tasklist > ' + list_path)
         with open(list_path, 'r', encoding = "utf8", errors = 'ignore') as file:
@@ -62,7 +63,27 @@ class taskmanager:
                 line = line.replace('\n', '').split()
                 if (line):
                     process = line[0]
+                    pid     = line[1]
                     if (process.endswith('.exe')):
                         process_list.append(process)
-        os.remove(list_path)
+        remove(list_path)
         return process_list
+
+    def getpid(process):
+        random_number = str(randint(1, 99999))
+        list_path = module_location + r'\tempdata\process_pid_' + random_number + '.tmp'
+        command.system('@tasklist > ' + list_path)
+        with open(list_path, 'r', encoding = "utf8", errors = 'ignore') as file:
+            for line in file.readlines():
+                line = line.replace('\n', '').split()
+                if (line):
+                    process_name = line[0]
+                    process_id   = line[1]
+                    if (process_name.endswith('.exe')):
+                        if (process_name.lower() == process.lower()):
+                            break
+                        else:
+                            process_id = False
+
+        remove(list_path)
+        return process_id
