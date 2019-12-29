@@ -1,6 +1,6 @@
-from os import remove, path
-from pyperclip import copy, paste
-from threading import Thread
+from os              import remove, path
+from threading       import Thread
+from hackpy.commands import *
 from hackpy.activity import *
 from hackpy.time     import *
 
@@ -8,12 +8,12 @@ from hackpy.time     import *
 ##| hackpy.clipboard.set('Text') # Copy text to clipboard
 ##| print('Data in clipboard:' + clipboard.get()) # Get text from clipboard
 ##|
-def set(text):
-    return copy(text)
+def set(text = ''):
+    command.powershell('Set-Clipboard ' + text)
 
 def get():
-    return paste()
-
+    text = command.powershell('Get-Clipboard')
+    return text
 
 # ClipboardLogger module
 class Clipboardlogger:

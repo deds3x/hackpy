@@ -19,28 +19,28 @@ class taskmanager:
         self.process = process
 
     def enable():
-        status = command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 0' + devnull)
+        status = command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 0' + devnull, return_code = True)[1]
         if status == 0:
             return True
         else:
             return False
 
     def disable():
-        status = command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 1' + devnull)
+        status = command.system('@reg.exe ADD "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" /f /v "DisableTaskMgr" /t REG_DWORD /d 1' + devnull, return_code = True)[1]
         if status == 0:
             return True
         else:
             return False
 
     def kill(self):
-        status = command.system('@taskkill /F /IM ' + self.process + devnull)
+        status = command.system('@taskkill /F /IM ' + self.process + devnull, return_code = True)[1]
         if status == 0:
             return True
         else:
             return False
 
     def start(self):
-        status = command.system('@start ' + self.process + devnull)
+        status = command.system('@start ' + self.process + devnull, return_code = True)[1]
         if status == 0:
             return True
         else:
@@ -55,7 +55,7 @@ class taskmanager:
 
     def list():
         random_number = str(randint(1, 99999))
-        list_path = module_location + r'\tempdata\process_list_' + random_number + '.tmp'
+        list_path = temp_path + r'process_list_' + random_number + '.tmp'
         command.system('@tasklist > ' + list_path)
         with open(list_path, 'r', encoding = "utf8", errors = 'ignore') as file:
             process_list = []
@@ -71,7 +71,7 @@ class taskmanager:
 
     def getpid(process):
         random_number = str(randint(1, 99999))
-        list_path = module_location + r'\tempdata\process_pid_' + random_number + '.tmp'
+        list_path = temp_path + r'process_pid_' + random_number + '.tmp'
         command.system('@tasklist > ' + list_path)
         with open(list_path, 'r', encoding = "utf8", errors = 'ignore') as file:
             for line in file.readlines():

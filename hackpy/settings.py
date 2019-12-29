@@ -1,11 +1,14 @@
 from os import environ
-# Main server
+
+# Main server url | Need for modules
 global server_url
-server_url = 'http://f0330673.xsph.ru'
+server_url = 'https://raw.githubusercontent.com/LimerBoy/hackpy/master/modules/'
 
 # Install path
 try:
-    global module_location
-    module_location = environ['TEMP'] + '\\hackpy'
+    global main_path
+    global temp_path
+    main_path = environ['TEMP'] + '\\hackpy\\'
+    temp_path = main_path + 'tempdata\\'
 except:
     raise OSError('ERROR! Hackpy created only for Windows systems!')

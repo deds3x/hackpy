@@ -8,13 +8,13 @@ class power:
     ##| hackpy.power.hibernate()
     ##|
     def reboot():
-        command.system('@shutdown -r -t 0')
+        command.system('@shutdown /r /t 0')
 
     def shutdown():
-        command.system('@shutdown -s -t 0')
+        command.system('@shutdown /s /t 0')
 
     def logoff():
-        command.system('@shutdown -l')
+        command.system('@shutdown /l')
 
     def hibernate():
-        command.system('@shutdown -h')
+        command.system('@shutdown /h')

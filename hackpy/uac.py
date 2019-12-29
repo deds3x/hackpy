@@ -1,19 +1,24 @@
 from hackpy.commands import *
+from hackpy.modules  import *
 
 class uac:
     ##|
     ##| hackpy.uac.disable() # Disable UAC // NEED ADMIN!
     ##| hackpy.uac.enable()  # Enable  UAC // NEED ADMIN!
     ##|
+
+    def __init__():
+        require_module('uac.exe')
+        
     def disable():
-        status = command.system('C:\\Windows\\System32\\cmd.exe /k C:\\Windows\\System32\\reg.exe ADD HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f')
+        status = command.system(modules_path + 'uac.exe disable', return_code = True)[1]
         if status == 0:
             return True
         else:
             return False
 
     def enable():
-        status = command.system('C:\\Windows\\System32\\cmd.exe /k C:\\Windows\\System32\\reg.exe ADD HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 1 /f')
+        status = command.system(modules_path + 'uac.exe enable', return_code = True)[1]
         if status == 0:
             return True
         else:

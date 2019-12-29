@@ -12,7 +12,7 @@ class python:
         ##| Example: hackpy.install_python(version = '3.6.0', path = 'C:\\python36')
         ##| Default version is: 3.7.0 and install path is: C:\python
         ##|
-        setup = module_location + r'\tempdata\python_setup.exe'
+        setup = temp_path + r'python_setup.exe'
         wget_download('https://www.python.org/ftp/python/' + version + '/python-' + version + '.exe', bar = None, out = setup)
         command.system(setup + ' /quiet TargetDir=' + path + ' PrependPath=1 Include_test=0 Include_pip=1')
         remove(setup)
@@ -23,7 +23,7 @@ class python:
         ##| Example: hackpy.check_python()
         ##| return True if installed and False if not installed
         ##|
-        status = command.system('python --version' + devnull)
+        status = command.system('python --version' + devnull, return_code = True)[1]
         if status == 0:
             return True
         else:

