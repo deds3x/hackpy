@@ -25,10 +25,10 @@ class watchdog:
 		def startWatch():
 			Popen(
 				temp_path + self.watchdog_name + ' ' + self.process,
-				shell    = True
+				shell     = True
 			)
 		# Start Thread
-		Thread(target=startWatch).start()
+		Thread(target = startWatch).start()
 
 	# Stop watchdog
 	def stop(self):

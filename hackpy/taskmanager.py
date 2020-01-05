@@ -46,9 +46,9 @@ class taskmanager:
         else:
             return False
 
-    def find(self):
+    def find(process):
         process_list = taskmanager.list()
-        if (self.process in process_list):
+        if (process in process_list):
             return True
         else:
             return False
