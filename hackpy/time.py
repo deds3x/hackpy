@@ -10,7 +10,6 @@ def sleep(secounds):
 def time():
 	return ti()
 
-
 # Date
 class date:
 	def now(args):

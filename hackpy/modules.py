@@ -45,6 +45,12 @@ def load_module(module):
 					archive.extractall(location.split('.')[0])
 				remove(location)
 
+# Load modules from .zip archive
+def load_archive(archive):
+	from zipfile import ZipFile
+	with ZipFile(archive, 'r') as archive:
+		archive.extractall(modules_path)
+
 # Load modules
 def load_modules(*modules):
 	for module in modules:
@@ -66,7 +72,6 @@ def unload_module(module):
 # Unloading modules
 def unload_modules(*modules):
 	for module in modules:
-		print(module)
 		unload_module(module)
 
 # Get modules list

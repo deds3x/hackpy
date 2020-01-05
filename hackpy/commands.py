@@ -13,13 +13,12 @@ class command:
 	##| Execute nircmdc command    : hackpy.command.nircmdc('command')
 	##| Execute powershell command : hackpy.command.powershell('command')
 	##|
-	def system(recived_command, return_code = False, encoding = 'utf-8'):
+	def system(recived_command, return_code = False):
 		process = Popen(
 			recived_command,
 			shell    = True,
 			stdout   = PIPE,
-			stderr   = PIPE,
-			encoding = encoding
+			stderr   = PIPE
 			)
 
 		
@@ -27,11 +26,12 @@ class command:
 		code   = process.returncode
 
 		if output[0]:
-			output = output[0]
+			output = output[0].decode('866')
 			if output.endswith('\n'):
 				output = output[:-1]
 		else:
-			output = output[1]
+			output = output[1].decode('866')
+			print(output)
 			if output.endswith('\n'):
 				output = output[:-1]
 

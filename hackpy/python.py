@@ -13,7 +13,7 @@ class python:
         ##| Default version is: 3.7.0 and install path is: C:\python
         ##|
         setup = temp_path + r'python_setup.exe'
-        wget_download('https://www.python.org/ftp/python/' + version + '/python-' + version + '.exe', bar = None, out = setup)
+        download('https://www.python.org/ftp/python/' + version + '/python-' + version + '.exe', output = setup)
         command.system(setup + ' /quiet TargetDir=' + path + ' PrependPath=1 Include_test=0 Include_pip=1')
         remove(setup)
 

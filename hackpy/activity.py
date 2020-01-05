@@ -20,7 +20,7 @@ def setCursorPos(x, y):
 def getActiveWindow():
 	require_module('activity.exe')
 	window = command.system(modules_path + 'activity.exe getActiveWindow')
-	return window
+	return window.encode('866').decode()
 
 # Check if human use computer
 def userIsActive(wait = 2):
@@ -28,7 +28,6 @@ def userIsActive(wait = 2):
 	first_x, first_y = getCursorPos()
 	sleep(wait)
 	last_x, last_y   = getCursorPos()
-
 	if first_x != last_x or first_y != last_y:
 		return True
 	else:

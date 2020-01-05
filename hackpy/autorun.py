@@ -1,5 +1,3 @@
-from os import remove, environ, getenv
-from os import path as os_path
 from hackpy.settings import *
 from hackpy.commands import *
 from hackpy.modules  import *
