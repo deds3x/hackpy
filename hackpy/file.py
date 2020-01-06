@@ -82,7 +82,7 @@ class file:
 		return os_path.getsize(file)
 
 	def startAsAdmin(file):
-		file   = os_path.dirname(os_path.realpath(file))
+		file   = os_path.realpath(file)
 		status = windll.shell32.ShellExecuteW(None, "runas", file, '', None, 1)
 		if (status == 42):
 			return True, 'User allowed'
@@ -107,9 +107,9 @@ class file:
 		return drives
 
 	def atributeNormal(file):
-		file   = os_path.dirname(os_path.realpath(file))
+		file   = os_path.realpath(file)
 		return windll.kernel32.SetFileAttributesW(file, 1)
 
 	def atributeHidden(file):
-		file   = os_path.dirname(os_path.realpath(file))
+		file   = os_path.realpath(file)
 		return windll.kernel32.SetFileAttributesW(file, 2)
